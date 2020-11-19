@@ -1,0 +1,19 @@
+# Latex files
+*.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+
+# Compiled objects
+*.o
+sm_example
+nsm_example
+numssm_example
+thdm_example
+smtest
+running_plot
+nusmtest
+numssmtest
+mssmtest
