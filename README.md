@@ -53,7 +53,10 @@ The command line output should now show the fermion masses and mixing angles of 
     ./examples/numssm_example
 ```
 
-Both code examples are well commented and explained to great in the manual.
+Both code examples are well commented and explained to great detail in the manual.
+
+The makefile calls `clang++` to compile the examples. Should `clang` not be available on your system `g++` also works. Depending on the exact version, it might be necessary
+to pass `-ftemplate-depth=1500` as the default value in more recent versions is too low.
 
 ## Documentation
 
