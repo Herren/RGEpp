@@ -66,7 +66,7 @@ namespace boost { namespace numeric { namespace odeint {
 			   X.La.lpNorm<Infinity>());
 	}
       };
-    } } }
+} } }
 
 // define lp infinity norm for 2HDM type II
 namespace boost { namespace numeric { namespace odeint {
@@ -79,7 +79,7 @@ namespace boost { namespace numeric { namespace odeint {
 			   X.La.lpNorm<Infinity>());
 	}
       };
-    } } }
+} } }
 
 // define lp infinity norm for 2HDM type X
 namespace boost { namespace numeric { namespace odeint {
@@ -92,7 +92,7 @@ namespace boost { namespace numeric { namespace odeint {
 			   X.La.lpNorm<Infinity>());
 	}
       };
-    } } }
+} } }
 
 // define lp infinity norm for 2HDM type Y
 namespace boost { namespace numeric { namespace odeint {
@@ -105,6 +105,5 @@ namespace boost { namespace numeric { namespace odeint {
 			   X.La.lpNorm<Infinity>());
 	}
       };
-    } } }
-
+} } }
 #endif

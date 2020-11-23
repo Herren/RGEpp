@@ -11,8 +11,8 @@
 using namespace Eigen;
 
 // beta functions for sm
-void sm::operator()(const sm &X, sm &dX, const double){
-  if (check()){
+void sm::operator()(const sm &X, sm &dX, const double) {
+  if(check()) {
 
     // variables for powers of parameters for nloops >= 1
     gauge<3> g2(X.g.array().square().matrix());
@@ -276,6 +276,7 @@ void sm::operator()(const sm &X, sm &dX, const double){
                                + (-216.)*Yu2Tr*z3*g2[1]*La2 + (-999./10.)*g2[0]*g2[1]*La2 + (-243./5.)*z3*g2[0]*g2[1]*La2 + (-612.)*Yd2Tr*g2[2]*La2 + (-612.)*Yu2Tr*g2[2]*La2 + (576.)*Yd2Tr*z3*g2[2]*La2
                                + (576.)*Yu2Tr*z3*g2[2]*La2 + (-1881./25.)*g4[0]*La2 + (-729./50.)*z3*g4[0]*La2 + (-1389./16.)*g4[1]*La2 + (-513./2.)*z3*g4[1]*La2 + (873./8.)*Yd2Tr*La3 + (291./8.)*Ye2Tr*La3
                                + (873./8.)*Yu2Tr*La3 + (-237./20.)*g2[0]*La3 + (9./5.)*z3*g2[0]*La3 + (-237./4.)*g2[1]*La3 + (9.)*z3*g2[1]*La3 + (897./8.)*La4 + (63.)*z3*La4);
+                               
         if(X.nloops > 3) {
           gauge<3> g9(g7.cwiseProduct(g2));
           // extract quark masses and mixing

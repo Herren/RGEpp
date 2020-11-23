@@ -15,7 +15,6 @@ class sm : public base<3,1> {
   void operator()(const sm &X, sm &dX, const double);
 };
 
-
 using namespace Eigen;
 // define lp infinity norm for sm
 namespace boost { namespace numeric { namespace odeint {
@@ -28,6 +27,5 @@ namespace boost { namespace numeric { namespace odeint {
 			   X.La.lpNorm<Infinity>());
 	}
       };
-    } } }
-
+} } }
 #endif

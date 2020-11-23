@@ -25,6 +25,5 @@ namespace boost { namespace numeric { namespace odeint {
 			   std::max( X.Yd.lpNorm<Infinity>(), X.Ye.lpNorm<Infinity>()));
 	}
       };
-    } } }
-
+} } }
 #endif

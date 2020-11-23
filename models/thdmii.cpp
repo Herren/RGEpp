@@ -8,8 +8,8 @@
 using namespace Eigen;
 
 // beta functions for 2HDM Type II
-void thdmii::operator()(const thdmii &X, thdmii &dX, const double){
-  if (check()){
+void thdmii::operator()(const thdmii &X, thdmii &dX, const double) {
+  if(check()) {
 
     // variables for powers of parameters for nloops >= 1
     gauge<3> g2(X.g.array().square().matrix());

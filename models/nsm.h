@@ -7,7 +7,8 @@ class nsm : public base<3,3> {
   
  public:
  nsm() : base<3,3>() {};
- nsm(const gauge<3> g_in, std::complex<double> La1_in, std::complex<double> La2_in, std::complex<double> La3_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,3>(g_in, Yu_in, Yd_in, Ye_in, 1) { La << La1_in, La2_in, La3_in; };
+ nsm(const gauge<3> g_in, std::complex<double> La1_in, std::complex<double> La2_in, std::complex<double> La3_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in)
+      : base<3,3>(g_in, Yu_in, Yd_in, Ye_in, 1) { La << La1_in, La2_in, La3_in; };
  nsm(const base<3,3> &X) : base<3,3>(X) {};
  
   // contains the RGEs
@@ -27,6 +28,5 @@ namespace boost { namespace numeric { namespace odeint {
 			   X.La.lpNorm<Infinity>());
 	}
       };
-    } } }
-
+} } }
 #endif

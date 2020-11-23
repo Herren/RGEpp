@@ -8,8 +8,8 @@
 using namespace Eigen;
 
 // beta functions for mssm
-void mssm::operator()(const mssm &X, mssm &dX, const double){
-  if (check()){
+void mssm::operator()(const mssm &X, mssm &dX, const double) {
+  if(check()) {
 
     // variables for powers of parameters for nloops >= 1
     gauge<3> g2(X.g.array().square().matrix());

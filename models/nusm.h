@@ -11,7 +11,7 @@ class nusm : public nubase<3,1> {
  nusm(const nubase<3,1> &X) : nubase<3,1>(X) {};
 
   // RGEs
-  void operator() (const nusm & X , nusm & dX, const double);
+  void operator() (const nusm & X, nusm & dX, const double);
 };
 
 using namespace Eigen;
@@ -34,6 +34,5 @@ namespace boost { namespace numeric { namespace odeint {
 			  );
 	}
       };
-    } } } // namespace
-
+} } }
 #endif

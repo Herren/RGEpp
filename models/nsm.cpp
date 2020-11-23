@@ -7,8 +7,8 @@
 using namespace Eigen;
 
 // beta functions for sm
-void nsm::operator()(const nsm &X, nsm &dX, const double){
-  if (check()){
+void nsm::operator()(const nsm &X, nsm &dX, const double) {
+  if(check()) {
 
     // variables for powers of parameters for nloops >= 1
     gauge<3> g2(X.g.array().square().matrix());
@@ -20,8 +20,6 @@ void nsm::operator()(const nsm &X, nsm &dX, const double){
     yukawa Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
     yukawa Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
     yukawa Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
-    yukawa Yu2Yd2 = Yu2*Yd2;          std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
-    yukawa Yd2Yu2 = Yd2*Yu2;
 
     dX.g[0] = loopfactor*((41./10.)*g3[0]);
     dX.g[1] = loopfactor*((-19./6.)*g3[1]);
@@ -33,8 +31,8 @@ void nsm::operator()(const nsm &X, nsm &dX, const double){
     // NEW CODE for running of quartic couplings
     self<3> La2 = X.La.cwiseAbs2();
     
-    dX.La[0] = loopfactor*((12.)*X.La[0]*Yd2Tr + (-24.)*Yd4Tr + (4.)*X.La[0]*Ye2Tr + (-8.)*Ye4Tr + (12.)*X.La[0]*Yu2Tr + (-24.)*Yu4Tr + (-9./5.)*X.La[0]*g2[0] + (-9.)*X.La[0]*g2[1] + (9./5.)*g2[0]*g2[1] + (27./50.)*g4[0] + (9./2.)*g4[1]
-			   + 6.*La2[0] + 6.*La2[1]);
+    dX.La[0] = loopfactor*((12.)*X.La[0]*Yd2Tr + (-24.)*Yd4Tr + (4.)*X.La[0]*Ye2Tr + (-8.)*Ye4Tr + (12.)*X.La[0]*Yu2Tr + (-24.)*Yu4Tr
+                         + (-9./5.)*X.La[0]*g2[0] + (-9.)*X.La[0]*g2[1] + (9./5.)*g2[0]*g2[1] + (27./50.)*g4[0] + (9./2.)*g4[1] + 6.*La2[0] + 6.*La2[1]);
     dX.La[1] = loopfactor*( 4.*X.La[0]*X.La[1] + 4.*X.La[1]*X.La[2] );
     dX.La[2] = loopfactor*( 6.*La2[2] + 6.*La2[1]);
 
