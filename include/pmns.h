@@ -24,12 +24,12 @@ class pmns {
     vev(174.104) {}            // convention "for fermion masses"
   
   // constructor with Ye and M as input parameter
- pmns(yukawa Min, yukawa Yein) :
+ pmns(const yukawa Min, const yukawa Yein) :
   Ye(Yein), M(Min),                      // Yukawa matrices as input parameters
     PMNS(), elyuk(), numasses(), PMNSparameters(), vev(174.104) {}
 
   // constructor with Ye, M and vev as input parameter
- pmns(yukawa Min, yukawa Yein, double vevin) :
+ pmns(const yukawa Min, const yukawa Yein, const double vevin) :
   Ye(Yein), M(Min),                      // Yukawa matrices as input parameters
     PMNS(), elyuk(), numasses(), PMNSparameters(), vev(vevin) {}
   
@@ -47,7 +47,7 @@ class pmns {
   Vector4d get_PMNSparameters();
   Vector3d get_numasses();
   Vector3d get_elmasses();
-  Vector3d get_elmasses(double vev);
+  Vector3d get_elmasses(const double tanb);
   double get_betadecaymass();
   
 };

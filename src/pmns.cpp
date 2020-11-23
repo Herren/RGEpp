@@ -4,7 +4,7 @@
 using namespace Eigen;
 using namespace std;
 
-void pmns::calculate(){  // core routine for calculating all parameters 
+void pmns::calculate() {  // core routine for calculating all parameters 
   
   // NOTE: eigen uses the same convention for rotation matrices as REAP/MPT
   
@@ -48,37 +48,37 @@ void pmns::calculate(){  // core routine for calculating all parameters
   betadecaymass = sqrt(PMNSabs2.adjoint()*numasses.cwiseAbs2());
 }
 
-yukawa pmns::get_PMNS(){
+yukawa pmns::get_PMNS() {
   if (PMNS(0,0).real() == 0.) calculate();
   return PMNS;
 }
 
-Vector3d pmns::get_elyukawas(){
+Vector3d pmns::get_elyukawas() {
   if (elyuk[2]==0.) calculate();
   return elyuk;
 }
 
-Vector3d pmns::get_numasses(){
+Vector3d pmns::get_numasses() {
   if (numasses[2]==0.) calculate();
   return numasses;
 }
 
-Vector4d pmns::get_PMNSparameters(){
+Vector4d pmns::get_PMNSparameters() {
   if (PMNSparameters[0]==0.) calculate();
   return PMNSparameters;
 }
 
-Vector3d pmns::get_elmasses(){       // no argument: one Higgs doublet
+Vector3d pmns::get_elmasses() {       // no argument: one Higgs doublet
   if (elyuk[0]==0.) calculate();
   return vev*elyuk;
 }
 
-Vector3d pmns::get_elmasses(double tanb){  // one argument: two Higgs doublets
+Vector3d pmns::get_elmasses(const double tanb) {  // one argument: two Higgs doublets
   if (elyuk[0]==0.) calculate();
   return cos(atan(tanb))*vev*elyuk;
 }
 
-double pmns::get_betadecaymass(){
+double pmns::get_betadecaymass() {
   if (numasses[2]==0.) calculate();
   return betadecaymass;
 }

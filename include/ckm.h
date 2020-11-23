@@ -53,8 +53,8 @@ class ckm {
   Vector4d get_CKMparameters();
   Vector3d get_upmasses();
   Vector3d get_downmasses();
-  Vector3d get_upmasses(const double vev);
-  Vector3d get_downmasses(const double vev);
+  Vector3d get_upmasses(const double tanb);
+  Vector3d get_downmasses(const double tanb);
   
 };
 
