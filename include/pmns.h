@@ -6,7 +6,7 @@
 
 using namespace Eigen;
 
-class pmns{
+class pmns {
   
  private:
   yukawa Ye, M, PMNS;             // Yukawa matrices
@@ -16,11 +16,10 @@ class pmns{
   double betadecaymass;           // for Troitsk bound
   
  public:
-  
   // constructor without arguments
  pmns() : Ye(), M(),           // Yukawa matrices
     PMNS(),                    // CKM matrix
-    elyuk(), numasses(),        // eigenvalues
+    elyuk(), numasses(),       // eigenvalues
     PMNSparameters(),          // CKM parameters according to REAP/PT
     vev(174.104) {}            // convention "for fermion masses"
   
@@ -37,15 +36,16 @@ class pmns{
   void calculate();                // core routine
 
   // various member functions to return :
-  // the CKM matrix
-  // the eigenvalues of the Yukawas
-  // the quark mixing parameters
-  // quark masses (for one and two Higgs doublet models)
+  // the PMNS matrix
+  // the eigenvalues of the chared lepton Yukawas
+  // the lepton mixing parameters
+  // lepton masses (for one and two Higgs doublet models)
+  // the beta-decay mass
   
   yukawa get_PMNS();
   Vector3d get_elyukawas();
-  Vector3d get_numasses();
   Vector4d get_PMNSparameters();
+  Vector3d get_numasses();
   Vector3d get_elmasses();
   Vector3d get_elmasses(double vev);
   double get_betadecaymass();

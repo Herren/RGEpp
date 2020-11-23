@@ -6,7 +6,7 @@
 
 using namespace Eigen;
 
-class ckm{
+class ckm {
   
  private:
   yukawa Yu, Yd, CKM;             // Yukawa matrices
@@ -14,8 +14,7 @@ class ckm{
   Vector4d CKMparameters;         // mixing parameters
   const double vev;               // convention "for fermion masses"
   
- public:
-  
+ public: 
   // constructor without arguments
  ckm() : 
     Yu(), Yd(),                // Yukawa matrices
@@ -25,7 +24,7 @@ class ckm{
     vev(174.104) {}            // convention "for fermion masses"
   
   // constructor with Yu and Yd as input parameter
- ckm(yukawa Yuin, yukawa Ydin) :
+ ckm(const yukawa Yuin, const yukawa Ydin) :
     Yu(Yuin), Yd(Ydin),                      // Yukawa matrices as input parameters
       CKM(), upyuk(),
       downyuk(),
@@ -33,7 +32,7 @@ class ckm{
       vev(174.104) {}
 
   // constructor with Yu, Yd and the vev as input parameter
- ckm(yukawa Yuin, yukawa Ydin, double vevin) :
+ ckm(const yukawa Yuin, const yukawa Ydin, const double vevin) :
     Yu(Yuin), Yd(Ydin),                      // Yukawa matrices as input parameters
       CKM(), upyuk(),
       downyuk(),
@@ -54,8 +53,8 @@ class ckm{
   Vector4d get_CKMparameters();
   Vector3d get_upmasses();
   Vector3d get_downmasses();
-  Vector3d get_upmasses(double vev);
-  Vector3d get_downmasses(double vev);
+  Vector3d get_upmasses(const double vev);
+  Vector3d get_downmasses(const double vev);
   
 };
 
