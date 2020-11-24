@@ -4,7 +4,6 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{cite}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{array}
@@ -17,8 +16,10 @@
 \usepackage{verbatim}
 \usepackage{dsfont}
 \usepackage{bbm}
+\usepackage[backend=bibtex8,sorting=none,natbib=true,maxbibnames=10,style=numeric-comp,block=ragged]{biblatex}
 \usepackage{hyperref}
 \usepackage{listings}
+\bibliography{literature}
 
 \lstdefinestyle{cpp}{
   belowcaptionskip=1\baselineskip,
@@ -37,6 +38,20 @@
   stringstyle=\color{orange},
 }
 
+\hypersetup{%
+  colorlinks=true, linktocpage=true, pdfstartpage=1, pdfstartview=FitV,
+  breaklinks=true, pageanchor=true,
+  pdfpagemode=UseNone,
+  plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,
+  hypertexnames=true, pdfhighlight=/O,
+  urlcolor=RoyalBlue, linkcolor=Maroon, citecolor=RoyalBlue,
+  pdftitle={\texttt{RGE++}},
+  pdfauthor={Thomas Deppisch and Florian Herren},
+  pdfsubject={},
+  pdfkeywords={},
+  pdfcreator={pdfLaTeX},
+  pdfproducer={LaTeX with hyperref}
+}
 
 \begin{document}
 \lstset{style=cpp}
@@ -118,7 +133,6 @@ A brief summary, as well as an outlook on further developments can be found in \
 \section{\label{sec::manual}The RGE++ classes and functions}
 In this section we discuss the functionality of \texttt{RGE++} and its implementation. First, in Sec.~\ref{sec::installation}, we describe the installation and the dependencies of \texttt{RGE++},
 followed by a brief overview about the implemented models in Sec.~\ref{sec::overview}.
-
 The description of the base classes all models are derived from can be found in Sec.~\ref{sec::base}. In Sec.~\ref{sec::models} we discuss the implementation of the various models
 and fix the conventions. We conclude with documenting auxiliary functions in Sec.~\ref{sec::auxiliary}.
 
@@ -154,13 +168,11 @@ Thus for each model, this operator needs to implement the beta functions of the 
 \texttt{RGE++} implements the SM beta functions for gauge couplings, Yukawa matrices and the scalar quartic coupling up to three loops \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw,
                                Mihaila:2012fm,Mihaila:2012pz,Bednyakov:2012rb,Chetyrkin:2012rz,Bednyakov:2012en,Bednyakov:2014pia,Herren:2017uxn,Chetyrkin:2013wya,Bednyakov:2013eba,Bednyakov:2013cpa}.
 Furthermore, the four-loop corrections to the gauge coupling beta functions \cite{Davies:2019onf} are available\footnote{Note that in \cite{Davies:2019onf} only third generation Yukawa couplings are taken into account.}.
-
 Non-supersymmetric extensions implemented are the SM including right-handed neutrinos at two-loop order \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw, Antusch:2005gp, Grzadkowski:1987tf}, as well as
 the $\mathbb{Z}_2$-symmetric two-Higgs-doublet models at three-loop order for gauge coupling and Yukawa matrices and two-loop order for the quartic couplings
 \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw, Herren:2017uxn, Chowdhury:2015yja}.
-
 The beta functions for the minimal supersymmetric extension of the SM are implemented up to three-loop order \cite{Martin:1993zk,Ferreira:1996ug} and its extension with right-handed (s)neutrinos at two-loop order
-\cite{Martin:1993zk,Antusch:2005gp,Grzadkowski:1987wr}.
+\cite{Martin:1993zk,Antusch:2005gp,Grzadkowski:1987wr}. All implemented models employ $\mathrm{SU}(5)$ normalization for the $\mathrm{U}(1)_\mathrm{Y}$ gauge coupling $g_1$.
 
 A full list, including all references, can be found in Table \ref{tbl:models}.
 
@@ -196,19 +208,19 @@ A full list, including all references, can be found in Table \ref{tbl:models}.
 \paragraph{eigentypes.h}
 sets the type definitions
 \begin{lstlisting}
-   template<int n>
-   using gauge = Eigen::Matrix<double, n,1>;
+  template<int n>
+  using gauge = Eigen::Matrix<double, n,1>;
    
-   using yukawa = Eigen::Matrix<std::complex<double>, 3,3>;
+  using yukawa = Eigen::Matrix<std::complex<double>, 3,3>;
 
-   template<int n>
-   using self = Eigen::Matrix<std::complex<double>, n,1>;
+  template<int n>
+  using self = Eigen::Matrix<std::complex<double>, n,1>;
 \end{lstlisting}
 where \texttt{gauge} and \texttt{self} represent $n$-dimensional vectors of gauge and quartic couplings, while \texttt{yukawa} represents fixed-size quadratic Yukawa matrices.
 Furthermore, for each of the aforementioned types, the functions
 \begin{lstlisting}
-  typename abs(typename);     // returns the coefficient-wise absolute values
-  bool isnotnan(typename);    // checks whether a coupling is 'NaN'
+  typename abs(typename);  // returns the coefficient-wise absolute values
+  bool isnotnan(typename); // checks whether a coupling is 'NaN'
 \end{lstlisting}
 are defined, which are used internally in the routines solving the RGE numerically.
 The types defined in this header file constitute the basic data types on which the various classes are built.
@@ -216,23 +228,23 @@ The types defined in this header file constitute the basic data types on which t
 \paragraph{base.h}
 defines the class \texttt{base}, which serves as a base class from which all model classes with three Yukawa matrices are derived. The following model parameters are defined as \texttt{public} members:
 \begin{lstlisting}
-  gauge<n> g;           // vector of gauge couplings
-  self<m> La;           // Higgs selfcoupling(s)
-  yukawa Yu,Yd,Ye;      // yukawa matrices
+  gauge<n> g;      // vector of gauge couplings
+  self<m> La;      // Higgs selfcoupling(s)
+  yukawa Yu,Yd,Ye; // Yukawa matrices
 \end{lstlisting}
 Here \texttt{n} and \texttt{m} are the template parameters of \texttt{base}, specifying the number of gauge and quartic couplings of the model, respectively.
 The loop order for the beta functions is via the \texttt{protected} member
 \begin{lstlisting}
-  unsigned int nloops;  // loop order of the beta functions
+  unsigned int nloops; // loop order of the beta functions
 \end{lstlisting}
 In all models derived from \texttt{base} \texttt{nloops} defaults to \texttt{2}.
 
 \texttt{base.h} defines the following member functions of \texttt{base} as public:
 \begin{lstlisting}
-  void setZero()             // sets g, La, Yu, Yd, Ye to zero
-  bool check()               // returns 'true' if no Landau poles appear and no member is 'NaN'
-  void setNloops(const unsigned int)  // sets the value of nloops
-  unsigned int getNloops()   // returns the current value nloops
+  void setZero() // sets g, La, Yu, Yd, Ye to zero
+  bool check() // 'true' if no Landau poles appear and no member is 'NaN'
+  void setNloops(const unsigned int) // sets the value of nloops
+  unsigned int getNloops() // returns the current value nloops
 \end{lstlisting}
 Besides, \texttt{base} provides all vector space operations needed for the numerical integration with \texttt{odeint}. The classes \texttt{sm}, \texttt{thdmi/ii/x/y}, \texttt{mssm} are derived from \texttt{base}.
 
@@ -247,16 +259,16 @@ In analogy to \texttt{base}, it has the following model parameters as \texttt{pu
 \end{lstlisting}
 The loop order for the beta functions is set via the \texttt{protected} member
 \begin{lstlisting}
-    unsigned int nloops        // loop order of the beta functions
+  unsigned int nloops; // loop order of the beta functions
 \end{lstlisting}
 In all models derived from \texttt{nubase} \texttt{nloops} defaults to \texttt{2}.
 
 In analogy to \texttt{base.h}, \texttt{nubase.h} defines the following public member functions of \texttt{nubase}
 \begin{lstlisting}
-    void setZero();       // sets g, La, Yu, Yd, Ye, Yn, Ka, Mn to zero
-    bool check();               // returns 'true' if no Landau poles appear and no member is 'NaN'
-    void setNloops(const unsigned int);   // sets the value of nloops
-    unsigned int getNloops();   // returns the current value nloops
+  void setZero(); // sets g, La, Yu, Yd, Ye, Yn, Ka, Mn to zero
+  bool check(); // 'true' if no Landau poles appear and no member is 'NaN'
+  void setNloops(const unsigned int); // sets the value of nloops
+  unsigned int getNloops(); // returns the current value nloops
 \end{lstlisting}
 and provides all vector space operations needed for the numerical integration with \texttt{odeint}.
 
@@ -267,17 +279,18 @@ Furthermore, the class \texttt{nubase} supports the decoupling of heavy right-ha
 in the basis where \texttt{Mn} is diagonal. Here, $\kappa$ corresponds to \texttt{Ka}, the Wilson coefficient of the Weinberg operator.
 To this end, the class \texttt{nubase} implements the function
 \begin{lstlisting}
-    void integrate_out(int n);
+  void integrate_out(int n);
 \end{lstlisting}
 which integrates out the $n^\mathrm{th}$ generation (counting from zero) of right-handed neutrinos. 
 Afterwards, the $n^\mathrm{th}$ row of $Y_n$ (counting from zero) is set to zero.
 In addition, 
 \begin{lstlisting}
-    Eigen::Vector3d logthresholds()
+  Eigen::Vector3d logthresholds();
 \end{lstlisting}
 returns the logarithm of the eigenvalues of the right-handed neutrino mass matrix, while
 \begin{lstlisting}
-    yukawa getML(double vev)
+  yukawa getML(double vev);
+  yukawa getML(double vev, double tanb);
 \end{lstlisting}
 computes the masses of the light neutrinos.
 
@@ -287,10 +300,18 @@ The classes \texttt{nusm} and \texttt{numssm} are derived from \texttt{nubase}.
 \paragraph{sm.h}
 implements the class \texttt{sm}, which is derived as \texttt{public} from \texttt{base} and therefore has all members and member functions of \texttt{base}. A \texttt{sm} object can be constructed by
 \begin{lstlisting}
-   sm() : base<3,1>() {};
-   sm(const gauge<3> g_in, std::complex<double> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in, nloops_in) { La[0] = La_in; };
-   sm(const gauge<3> g_in, std::complex<double> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in) { La[0] = La_in; };
-   sm(const base<3,1> &X) : base<3,1>(X) {};
+  sm() : base<3,1>() {};
+  
+  sm(const gauge<3> g_in, const std::complex<double> La_in,
+     const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in,
+     const int nloops_in)
+   : base<3,1>(g_in, Yu_in, Yd_in, Ye_in, nloops_in) { La[0] = La_in; };
+   
+  sm(const gauge<3> g_in, const std::complex<double> La_in,
+     const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in)
+   : base<3,1>(g_in, Yu_in, Yd_in, Ye_in) { La[0] = La_in; };
+   
+  sm(const base<3,1> &X) : base<3,1>(X) {};
 \end{lstlisting}
 The first constructor initializes the values of all couplings to $0$, whereas in the second and third version the couplings are passed as arguments. The third version sets the number of loops to $2$.
 Finally, the fourth version serves as copy-constructor.
@@ -318,10 +339,17 @@ implements the classes \texttt{thdmi}, \texttt{thdmii}, \texttt{thdmx} and \text
 They are derived as \texttt{public} from \texttt{base} and therefore have all members and member functions of \texttt{base}.
 A Type-I 2HDM, for example, can be initialized by
 \begin{lstlisting}
- thdmi() : base() {};
- thdmi(const gauge g_in, const self La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
- thdmi(const gauge g_in, const self La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
- thdmi(const base &X) : base(X) {};
+  thdmi() : base() {};
+ 
+  thdmi(const gauge g_in, const self La_in, const yukawa Yu_in,
+        const yukawa Yd_in, const yukawa Ye_in, const int nloops_in)
+      : base(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
+      
+  thdmi(const gauge g_in, const self La_in, const yukawa Yu_in,
+        const yukawa Yd_in, const yukawa Ye_in)
+      : base(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
+      
+  thdmi(const base &X) : base(X) {};
 \end{lstlisting}
 The only difference w.r.t. the SM case is that the self-couplings now form a vector.
 
@@ -331,7 +359,22 @@ Like in the SM case, we use the 'right-left-convention' and take $\phi_2$ to be 
   - Y_d^{ij}\; \overline{d_{R}}_{i} \, \phi_2^\dagger \cdot Q_j
   - Y_u^{ij}\; \overline{u_{R}}_{i} \, Q_j^T \cdot \varepsilon \cdot \phi_2 + \mathrm{H.c.}~.
 \end{equation}
-The other types are defined accordingly. For the quartic scalar couplings $\lambda_i$ we have
+To obtain the other three types, one or two of the occurences of $\phi_2$ in the above Lagrangian have to be exchanged for $\phi_1$, according to Table \ref{tbl::2hdm}.
+
+\begin{table}
+  \centering
+  \begin{tabular}{cccc} \toprule
+    Type & $u_R$ & $d_R$ & $e_R$ \\\midrule
+    I & $\phi_2$ & $\phi_2$ & $\phi_2$ \\
+    II & $\phi_2$ & $\phi_1$ & $\phi_1$ \\
+    X & $\phi_2$ & $\phi_2$ & $\phi_1$ \\
+    Y & $\phi_2$ & $\phi_1$ & $\phi_2$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{\label{tbl::2hdm} Couplings of the scalar doublets to right-handed fermions in the four $\mathbb{Z}_2$-symmetric 2HDMs.}
+\end{table}
+
+For the quartic scalar couplings $\lambda_i$ we have
 \begin{equation} \label{eq:thdm_la}
   \mathcal{L}_{\mathrm{self}} = -\frac{\lambda_1}{2} (\phi_1^\dagger\phi_1)^2 -\frac{\lambda_2}{2} (\phi_2^\dagger\phi_2)^2 - \lambda_3(\phi_1^\dagger\phi_1)(\phi_2^\dagger\phi_2) - \lambda_4(\phi_1^\dagger\phi_2)(\phi_2^\dagger\phi_1)
                                 -\left[\frac{\lambda_5}{2} (\phi_1^\dagger\phi_2)^2 + \mathrm{h.c.}\right]~.
@@ -341,9 +384,12 @@ The other types are defined accordingly. For the quartic scalar couplings $\lamb
 \paragraph{mssm.h}
 implements the class \texttt{mssm}, which is derived as \texttt{public} from \texttt{base}. A \texttt{mssm} object can be constructed by
 \begin{lstlisting}
- mssm() : base<3,0>() {};
- mssm(const gauge<3> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,0>(g_in, Yu_in, Yd_in, Ye_in) {};
- mssm(const base<3,0> &X) : base<3,0>(X) {};
+  mssm() : base<3,0>() {};
+ 
+  mssm(const gauge<3> g_in, const yukawa Yu_in, const yukawa Yd_in,
+       const yukawa Ye_in) : base<3,0>(g_in, Yu_in, Yd_in, Ye_in) {};
+ 
+  mssm(const base<3,0> &X) : base<3,0>(X) {};
 \end{lstlisting}
 Note, that in the case of the MSSM, there are no quartic self-couplings of the scalars, which are not determined in terms of other couplings.
 Thus all entries of \texttt{La} are set to zero at construction.
@@ -357,9 +403,15 @@ The Yukawa couplings are fixed by the superpotential
 implements the class \texttt{nusm} which corresponds to the SM extended by three generations of right-handed neutrinos.
 \texttt{nusm} is derived as \texttt{public} from \texttt{nubase} and therefore has all members and member functions of \texttt{nubase}. A \texttt{nusm} object can be constructed by
 \begin{lstlisting}
- nusm() : nubase<3,1>() {};
- nusm(const gauge<3> g_in, std::complex<double> La_in, yukawa Yu_in, yukawa Yd_in, yukawa Ye_in, yukawa Yn_in, yukawa Ka_in, yukawa Mn_in) : nubase<3,1>(g_in, Yu_in, Yd_in, Ye_in, Yn_in, Ka_in, Mn_in) {La[0] = La_in;};
- nusm(const nubase<3,1> &X) : nubase<3,1>(X) {};
+  nusm() : nubase<3,1>() {};
+ 
+  nusm(const gauge<3> g_in, const std::complex<double> La_in,
+       const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in,
+       const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
+     : nubase<3,1>(g_in, Yu_in, Yd_in, Ye_in, Yn_in, Ka_in, Mn_in)
+     {La[0] = La_in;};
+  
+  nusm(const nubase<3,1> &X) : nubase<3,1>(X) {};
 \end{lstlisting}
 The conventions for the Yukawa couplings and Higgs couplings are those of eqs.~\eqref{eq:sm_yuk} and \eqref{eq:sm_la}. The conventions for \texttt{Yn, Ka, Mn} are
 \begin{equation}\label{eq:sm_nu}
@@ -369,9 +421,14 @@ The conventions for the Yukawa couplings and Higgs couplings are those of eqs.~\
 \paragraph{numssm.h}
 implements the class \texttt{numssm} which is derived as \texttt{public} from \texttt{nubase} and therefore has all members and member functions of \texttt{nubase}. A \texttt{numssm} object can be constructed by
 \begin{lstlisting}
- numssm() : nubase<3,0>() {};
- numssm(const gauge<3> g_in, yukawa Yu_in, yukawa Yd_in, yukawa Ye_in, yukawa Yn_in, yukawa Ka_in, yukawa Mn_in) : nubase<3,0>(g_in, Yu_in, Yd_in, Ye_in, Yn_in, Ka_in, Mn_in) {};
- numssm(const nubase<3,0> &X) : nubase<3,0>(X) {};
+  numssm() : nubase<3,0>() {};
+  
+  numssm(const gauge<3> g_in, const yukawa Yu_in, const yukawa Yd_in,
+         const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in,
+         const yukawa Mn_in)
+       : nubase<3,0>(g_in, Yu_in, Yd_in, Ye_in, Yn_in, Ka_in, Mn_in) {};
+  
+  numssm(const nubase<3,0> &X) : nubase<3,0>(X) {};
 \end{lstlisting}
 The conventions for the Yukawa couplings are thes same as in eq.~\eqref{eq:mssm_yuk}. For \texttt{Yn, Ka, Mn} we have
 \begin{equation} \label{eq:mssm_nu}
@@ -385,22 +442,24 @@ In the header files \texttt{ckm.h} and \texttt{pmns.h} classes to obtain fermion
 implements the class \texttt{ckm}.
 A \texttt{ckm} object can be constructed by
 \begin{lstlisting}
-  ckm(yukawa Yu, yukawa Yd)           // constructs ckm and sets Yu and Yd
+  ckm(const yukawa Yuin, const yukawa Ydin); // sets Yu and Yd
+  ckm(const yukawa Yuin, const yukawa Ydin, const double vevin);
+      // sets Yu, Yd and the vev
 \end{lstlisting}
 The routines the extract the quark observables from the Yukawa matrices are called by
 \begin{lstlisting}
-  void calculate()
+  void calculate();
 \end{lstlisting}
 Access to the results is given by the member functions
 \begin{lstlisting}
-  yukawa get_CKM()     // returns the CKM matrix
-  Eigen::Vector3d get_upyukawas()     // returns the central values y_u, y_c, y_t
-  Eigen::Vector3d get_downyukawas()     // returns the central values y_d, y_s, y_b
-  Eigen::Vector4d get_CKMparameters()     // return theta_12, theta_13, theta_23, deltaCP
-  Eigen::Vector3d get_upmasses()     // returns m_u, m_c, m_t using vev = 174 GeV
-  Eigen::Vector3d get_downmasses()     // returns m_d, m_s, m_b using vev = 174 GeV
-  Eigen::Vector3d get_upmasses(double vev)     // return m_u, m_c, m_t using vev
-  Eigen::Vector3d get_downmasses(double vev)     // returns m_d, m_s, m_b using vev
+  yukawa get_CKM(); // returns the CKM matrix
+  Vector3d get_upyukawas(); // returns the central values y_u, y_c, y_t
+  Vector3d get_downyukawas(); // returns the central values y_d, y_s, y_b
+  Vector4d get_CKMparameters(); // return theta_12, theta_13, theta_23, deltaCP
+  Vector3d get_upmasses(); // returns m_u, m_c, m_t
+  Vector3d get_downmasses(); // returns m_d, m_s, m_b
+  Vector3d get_upmasses(const double tanb); // return m_u, m_c, m_t using tanbeta
+  Vector3d get_downmasses(const double tanb); // returns m_d, m_s, m_b using tanbeta
 \end{lstlisting}
 The convention for the CKM matrix is chosen such that
 \begin{equation}
@@ -411,23 +470,25 @@ in the flavour basis where $Y_u$ is diagonal. The CKM parameters are defined as 
 \paragraph{pmns.h}
 implements the class \texttt{pmns} which can be constructed by
 \begin{lstlisting}
-  pmns(yukawa M, yukawa Ye)           // constructs pmns and sets M and Ye
+  pmns(const yukawa Min, const yukawa Yein); // sets M and Ye
+  pmns(const yukawa Min, const yukawa Yein, const double vevin);
+       // sets M, Ye and the vev
 \end{lstlisting}
 Note that $M$ is the mass matrix of the left-handed neutrinos.
 
 The routines the extract the lepton observables are called by
 \begin{lstlisting}
-  void calculate()
+  void calculate();
 \end{lstlisting}
 Access to the results is given by the member functions
 \begin{lstlisting}
-  yukawa get_PMNS()     // returns the PMNS matrix
-  Eigen::Vector3d get_elyukawas()     // returns the central values y_e, y_mu, y_tau
-  Eigen::Vector3d get_numasses()     // returns the light neutrino masses
-  Eigen::Vector4d get_PMNSparameters()      // returns theta_12, theta_13, theta_23, deltaCP
-  Eigen::Vector3d get_elmasses()      // returns the m_e, m_mu, m_tau using vev = 174 GeV
-  Eigen::Vector3d get_elmasses(double vev)     // returns the m_e, m_mu, m_tau using vev
-  double get_betadecaymass()     // returns the effective beta decay mass for neutrinos
+  yukawa get_PMNS(); // returns the PMNS matrix
+  Vector3d get_elyukawas(); // returns the central values y_e, y_mu, y_tau
+  Vector3d get_numasses(); // returns the light neutrino masses
+  Vector4d get_PMNSparameters(); // returns theta_12, theta_13, theta_23, deltaCP
+  Vector3d get_elmasses(); // returns m_e, m_mu, m_tau
+  Vector3d get_elmasses(const double tanb); // returns m_e, m_mu, m_tau using tanbeta
+  double get_betadecaymass(); // returns the effective beta decay mass for neutrinos
 \end{lstlisting}
 The convention for the PMNS matrix is chosen such that
 \begin{equation}
@@ -438,7 +499,8 @@ diagonalises $m_\nu$ in the flavour basis where $Y_e$ is diagonal. The PMNS para
 \paragraph{rundown.cpp}
 The template function\texttt{rundown} provides routines that simplify the numerical integration of the RGEs. As it uses the \texttt{auto} functionality, \texttt{rundown} will not work with standards prior to \texttt{C++11}. The numerical integration is called with
 \begin{lstlisting}
-rundown <Stepper, Model, Observer> (Model & state, double start, double end, double error = 1e-10, double firststep = 0.01)
+  rundown <Stepper, Model, Observer> (Model & state, double start,
+           double end, double error = 1e-10, double firststep = 0.01);
 \end{lstlisting}
 \texttt{Stepper} needs to be of \texttt{odeint} Error Stepper type, e.g. \texttt{runge\_kutta\_fehlberg78}. See the examples in Section~\ref{sec::examples} or the \texttt{odeint} documentation for greater detail. \texttt{Model} refers to an \texttt{RGE++} model (\texttt{sm}, \texttt{mssm}, \texttt{tdhmi/ii/x/y}, \texttt{nusm}, \texttt{numssm}) and \texttt{state} to an instantation thereof. \texttt{Observer} is a struct or class that provides an operator of the form \texttt{void operator()(const \& Model, double t)} that is called at each step of the numerical integration providing access to intermediate results. A possible example is given in \texttt{numssm\_example.cpp}. \texttt{Observer} can also be \texttt{void}, if intermediate results are not necessary.
 
@@ -455,19 +517,17 @@ To build the example call \texttt{make sm\_example} from the main folder.
 The first two lines of the \texttt{main} function parse the options given to the program via the command line. The first argument denotes the final renormalisation scale. If no argument is given it defaults to 3000 GeV. The
 second argument stands for the number of loops included in the beta functions. It defaults to 2 but can be chosen to be as high as 4, as the gauge coupling beta functions are implemented at this order,
 \begin{lstlisting}
-double scale = (argc == 2) ? atoi(argv[1]) : 3000.;
-int nloops = (argc == 3) ? atoi(argv[2]) : 2;
+  double scale = (argc == 2) ? atoi(argv[1]) : 3000.;
+  int nloops = (argc == 3) ? atoi(argv[2]) : 2;
 \end{lstlisting}
-
 Then the initial renormalisation scale is defined at which the input parameters are given
 \begin{lstlisting}
-double MZ(91.1876);
+  double MZ(91.1876);
 \end{lstlisting}
-
-The model parameters are \texttt{eigen3} matrix types. The down-type Yukawa matrix $Y_d$ e.g is initialized and defined as \footnote{Please cite \cite{Deppisch:2018flu} and references therein if you use these numbers.}
+The model parameters are \texttt{eigen3} matrix types. The down-type Yukawa matrix $Y_d$ e.g. is initialized and defined as \footnote{Please cite \cite{Deppisch:2018flu} and references therein if you use these numbers.}
 \begin{lstlisting}
-yukawa Yd; 
-Yd << 0.0000166293, 0,0,0, 0.000310436, 0,0,0, 0.0164568;
+  yukawa Yd; 
+  Yd << 0.0000166293, 0,0,0, 0.000310436, 0,0,0, 0.0164568;
 \end{lstlisting}
 The non-zero numbers are the down-, strange- and bottom-quark Yukawa couplings in the basis where the down-type Yukawa matrix is diagonal.
 For details on how to define and manipulate  \texttt{eigen3} matrix types see the \texttt{eigen3} manual. In a flavour basis where $Y_u$ is diagonal, $Y_d$ takes the form
@@ -476,23 +536,24 @@ For details on how to define and manipulate  \texttt{eigen3} matrix types see th
 \end{equation}
 This rotation is performed by the line
 \begin{lstlisting}
-Yd = Yd*ckm(th12,th13,th23,phi).adjoint();
+  Yd = Yd*ckm(th12,th13,th23,phi).adjoint();
 \end{lstlisting}
 Note that the function \texttt{ckm} returns the CKM matrix in the conventions of the PDG \cite{Patrignani:2016xqp} taking the mixing angles and the CP phase as input and is defined at the beginning of \texttt{sm\_example}.
 
 Using these input parameters we can now construct the \texttt{sm} class object \texttt{values} which contains both the RGEs and the input parameters
 \begin{lstlisting}
-sm values(g, lambda, Yu, Yd, Ye, nloops);
+  sm values(g, lambda, Yu, Yd, Ye, nloops);
 \end{lstlisting}
 
 For the numerical integration an \texttt{ODEint} stepper needs to be defined \footnote{See the \texttt{ODEint} documentation for other steppers. In our tests all adaptive steppers performed equally well.}
 \begin{lstlisting}
-using namespace boost::numeric::odeint;
-typedef runge_kutta_fehlberg78< sm , double , sm , double , vector_space_algebra > stepper;
+  using namespace boost::numeric::odeint;
+  typedef runge_kutta_fehlberg78< sm, double, sm, double, vector_space_algebra > stepper;
 \end{lstlisting}
 The integration is then performed by
 \begin{lstlisting}
-int steps = integrate_adaptive( make_controlled<stepper>( 1E-10 , 1E-10 ) , sm() , values , log(MZ) , log(scale) , 0.01 );
+  int steps = integrate_adaptive(make_controlled<stepper>(1E-10, 1E-10),
+                                 sm(), values, log(MZ), log(scale), 0.01);
 \end{lstlisting}
 The \texttt{sm} class object \texttt{values} now contains the SM parameters at the renormalisation scale \texttt{scale}. The argument \texttt{make\_controlled<stepper>( 1E-10 , 1E-10 )} concerns the error control
 and the last argument \texttt{0.01} defines the size of the first step of the integration. For calculating RGEs, these are sensible values from our experience.
@@ -501,67 +562,69 @@ renormalised theory parameters with respect to the renormalisation scale.
 
 To extract the physical observables, i.e. fermion masses and their mixing angles,  from the Yukawa matrices we can use the \texttt{ckm} and \texttt{pmns} classes. A \texttt{ckm} object is defined by
 \begin{lstlisting}
-class ckm quarks(values.Yu, values.Yd);
+  class ckm quarks(values.Yu, values.Yd);
 \end{lstlisting}
 and the quark masses and CKM parameters are calculated by calling
 \begin{lstlisting}
-quarks.calculate();
+  quarks.calculate();
 \end{lstlisting}
 They can be accessed as shown in the final lines of the example
 \begin{lstlisting}
-std::cout << "up-type yukawas: " << quarks.get_upyukawas().transpose() << std::endl;
-  \end{lstlisting}
+  std::cout << "up-type yukawas: "
+            << quarks.get_upyukawas().transpose() << std::endl;
+\end{lstlisting}
 The program can be called from the command line via
- \begin{lstlisting}
- /examples/sm_example
-  \end{lstlisting}
+\begin{lstlisting}
+  /examples/sm_example
+\end{lstlisting}
 Since we have not given any additional options to the program the output should look like
-   \begin{lstlisting}
-SM parameters at 3000 GeV and 2 loops:
-gauge couplings: 0.47077 0.63383  1.0008
-up-type yukawas: 6.3691e-06   0.002976    0.83158
-down-type yukawas: 1.3614e-05 0.00025413   0.013092
-charged lepton yukawas: 2.8666e-06 0.00060516   0.010287
-ckm parameters:   0.22704 0.0038204  0.043031     1.143
-Higgs selfcoupling: (0.50749,-8.5389e-59)
-   \end{lstlisting}
+\begin{lstlisting}
+  SM parameters at 3000 GeV and 2 loops:
+  gauge couplings: 0.47077 0.63383  1.0008
+  up-type yukawas: 6.3691e-06   0.002976    0.83158
+  down-type yukawas: 1.3614e-05 0.00025413   0.013092
+  charged lepton yukawas: 2.8666e-06 0.00060516   0.010287
+  ckm parameters:   0.22704 0.0038204  0.043031     1.143
+  Higgs selfcoupling: (0.50749,-8.5389e-59)
+\end{lstlisting}
 The SM parameters at 5000 GeV using three-loop accuracy can e.g. be obtained by calling
 \begin{lstlisting}
-./examples/sm_example 5000 3
-  \end{lstlisting}
+  ./examples/sm_example 5000 3
+\end{lstlisting}
 
 \subsection{\label{sec::sm_plot_example} SM example suitable for plotting}
 A further SM example is given in \texttt{running\_plot.cppp}. It can be build by invoking \texttt{make running\_plot} from the main folder.
 The setup is similar as in the previous example, however, instead of an adaptive stepsize, it uses a constant one.
 In this case, the integration is performed by
 \begin{lstlisting}
-int steps = integrate_const(stepper(), sm(), values , log(MZ) , log(MGUT), 1., write_out() );
+  int steps = integrate_const(stepper(), sm(), values, log(MZ),
+                              log(MGUT), 1., write_out());
 \end{lstlisting}
 where the last argument of \texttt{integrate\_const} is a structure with an overloaded operator \texttt{()} that gets called at each step.
 It is implemented as
 \begin{lstlisting}
-struct write_out{
-  void operator()(const sm &x, double t ){
+  struct write_out{
+    void operator()(const sm &x, double t ){
 
-    // calculate quark Yukawas
-    ckm quarks(x.Yu, x.Yd);
-    quarks.calculate();
+      // calculate quark Yukawas
+      ckm quarks(x.Yu, x.Yd);
+      quarks.calculate();
 
-    // calculate lepton Yukawas
-    yukawa zero;
-    pmns leptons(zero, x.Ye);
-    leptons.calculate();
+      // calculate lepton Yukawas
+      yukawa zero;
+      pmns leptons(zero, x.Ye);
+      leptons.calculate();
     
-    // write to standard output
-    std::cout << exp(t) << "   "
+      // write to standard output
+      std::cout << exp(t) << "   "
 	      << alpha(x.g[0]) << "   "
       	      << alpha(x.g[1]) << "   "
       	      << alpha(x.g[2]) << "   "
 	      << alpha(quarks.get_upyukawas()[2]) << "   "
 	      << alpha(quarks.get_downyukawas()[2]) << "   "
 	      << alpha(leptons.get_elyukawas()[2]) << std::endl;
-  }
-};
+    }
+  };
 \end{lstlisting}
 and prints the $\alpha_i = g_i^2/\left(4\pi\right)$ to standard output.
 
@@ -595,65 +658,64 @@ does not influence the running of the gauge couplings and Yukawa matrices. These
 
 The code \texttt{numssm\_example.cpp} starts with defining the initial and final renormalisation scales
 \begin{lstlisting}
-double MGUT = 2.e16;
-double MZ = 91.1876;
+  double MGUT = 2.e16;
+  double MZ = 91.1876;
 \end{lstlisting}
 The Yukawa matrices and the gauge couplings are defined by
 \begin{lstlisting}
-yukawa zero, Y1, Y2;
-gauge g;
+  yukawa zero, Y1, Y2;
+  gauge g;
 
-Y1 << 1.e-4, 0., 0.,  0., 2.e-2, 0.,  0., 0., 0.4;
-Y2 << 0., -2.e-3, 3.e-2,  -2.e-3, 0., 0.5,  3.e-2, 0., 0.5;
-g << 0.7, 0.7, 0.7;
+  Y1 << 1.e-4, 0., 0.,  0., 2.e-2, 0.,  0., 0., 0.4;
+  Y2 << 0., -2.e-3, 3.e-2,  -2.e-3, 0., 0.5,  3.e-2, 0., 0.5;
+  g << 0.7, 0.7, 0.7;
 \end{lstlisting}
-
 Using those input parameters, and following Eq.~(\ref{eq::GUT}) we construct a \texttt{numssm} object via
 \begin{lstlisting}
-numssm values(g, Y1 + Y2, Y1 - Y2, Y1 - Y2, Y1 + Y2, zero, Y1*1.e14); 
- \end{lstlisting}
- The matrix \texttt{zero} contains zeros in each entry and is used to set the Wilson coefficient of the Weinberg operator $\kappa$ to zero at the beginning.
+  numssm values(g, Y1 + Y2, Y1 - Y2, Y1 - Y2, Y1 + Y2, zero, Y1*1.e14); 
+\end{lstlisting}
+The matrix \texttt{zero} contains zeros in each entry and is used to set the Wilson coefficient of the Weinberg operator $\kappa$ to zero at the beginning.
  
- Again, the \texttt{ODEint} stepper functions have to be set up for the numerical integration
+Again, the \texttt{ODEint} stepper functions have to be set up for the numerical integration
 \begin{lstlisting}
-using namespace boost::numeric::odeint;
-typedef runge_kutta_fehlberg78< numssm , double , numssm , double , vector_space_algebra > stepper;
- \end{lstlisting}
- This time, however, we will use the \texttt{rundown} template which not only performs the integration but also determines the see-saw scale (i.e. the mass scales of the right-handed neutrinos) and integrates out the right-handed neutrinos at tree-level, when coming across these see-saw scales.
-  \begin{lstlisting}
-rundown<stepper,numssm,void> foo(values, log(MGUT), log(MZ));
-  \end{lstlisting}
-  Note, that although the name suggests otherwise, \texttt{rundown} works 'both ways', i.e. both from the high to the low as well as from the low to high renormalisation scale. Only when evolving to a lower renormalisation scale, however, it will check for thresholds and integrate out the relevant particles using the \texttt{integrate\_out()} routine of the respective model (\texttt{numssm} in this case).
+  using namespace boost::numeric::odeint;
+  typedef runge_kutta_fehlberg78< numssm, double, numssm, double, vector_space_algebra > stepper;
+\end{lstlisting}
+This time, however, we will use the \texttt{rundown} template which not only performs the integration but also determines the see-saw scale (i.e. the mass scales of the right-handed neutrinos) and integrates out the right-handed neutrinos at tree-level, when coming across these see-saw scales.
+\begin{lstlisting}
+  rundown<stepper,numssm,void> foo(values, log(MGUT), log(MZ));
+\end{lstlisting}
+Note, that although the name suggests otherwise, \texttt{rundown} works 'both ways', i.e. both from the high to the low as well as from the low to high renormalisation scale. Only when evolving to a lower renormalisation scale, however, it will check for thresholds and integrate out the relevant particles using the \texttt{integrate\_out()} routine of the respective model (\texttt{numssm} in this case).
   
-  Since the MSSM contains two Higgs doublets, also the ratio of the respective vevs $\tan\beta = v_2 / v_1$ has to be defined in order to calculate the fermion masses.
-    \begin{lstlisting}
-    double tanb(60.);
-    \end{lstlisting}
+Since the MSSM contains two Higgs doublets, also the ratio of the respective vevs $\tan\beta = v_2 / v_1$ has to be defined in order to calculate the fermion masses.
+\begin{lstlisting}
+  double tanb(60.);
+\end{lstlisting}
 As before the quark masses and their mixing can be extracted from the Yukawa matrices by
-  \begin{lstlisting}
-class ckm quarks(values.Yu, values.Yd);
-quarks.calculate();
-    \end{lstlisting}
-    In the lepton sector we additionally need the mass matrix of the left-handed neutrinos which is calculated from the Wilson coefficient of the Weinberg operator $\kappa$.
-    \begin{lstlisting}
-yukawa ML = values.getML(tanb);   // left-handed neutrino mass matrix
-class pmns leptons(ML, values.Ye);
-leptons.calculate();
-  \end{lstlisting}
-  The results can be written to the standard output similar to
-  \begin{lstlisting}
-std::cout << "up-type masses (GeV): " << quarks.get_upmasses(tanb).transpose() << std::endl;
+\begin{lstlisting}
+  class ckm quarks(values.Yu, values.Yd);
+  quarks.calculate();
+\end{lstlisting}
+In the lepton sector we additionally need the mass matrix of the left-handed neutrinos which is calculated from the Wilson coefficient of the Weinberg operator $\kappa$.
+\begin{lstlisting}
+  yukawa ML = values.getML(tanb);   // left-handed neutrino mass matrix
+  class pmns leptons(ML, values.Ye);
+  leptons.calculate();
+\end{lstlisting}
+The results can be written to the standard output similar to
+\begin{lstlisting}
+  std::cout << "up-type masses (GeV): " << quarks.get_upmasses(tanb).transpose() << std::endl;
 \end{lstlisting}    
 The complete output should then look like
 \begin{lstlisting}
-nuMSSM parameters at MZ:
-gauge couplings: 0.45494 0.63045  1.1092
-ckm parameters:  0.95698 0.058163 0.030761   3.1416
-up-type masses (GeV): 0.21387  2.5366  58.719
-down-type masses (GeV): 0.11008  4.1667  46.608
-PMNS parameters:    1.5057  0.037873 0.0012002    3.1416
-neutrino masses  (eV): 0.00037949    0.01031     3.4087
-charged lepton massess  (GeV): 0.0025152  0.095236    1.3424
+  nuMSSM parameters at MZ:
+  gauge couplings: 0.45494 0.63045  1.1092
+  ckm parameters:  0.95698 0.058163 0.030761   3.1416
+  up-type masses (GeV): 0.6205 7.3594 170.36
+  down-type masses (GeV): 0.0053232   0.20148    2.2537
+  PMNS parameters:    1.5057  0.037873 0.0012002    3.1416
+  neutrino masses  (eV): 0.00037949    0.01031     3.4087
+  charged lepton massess  (GeV): 0.0025152  0.095236    1.3424
 \end{lstlisting}    
 
 \subsection{\label{sec::adding} Adding Own Models}
@@ -668,16 +730,22 @@ The same holds also for the gauge couplings. We only need to adopt the RGEs in t
 
 Let us start this example with the header file \texttt{nsm.h} in the \texttt{models} folder. The class definition of the \texttt{nsm} class is
 \begin{lstlisting}
-class nsm : public base<3,3> {
+  class nsm : public base<3,3> {
   
- public:
- nsm() : base<3,3>() {};
- nsm(const gauge<3> g_in, std::complex<double> La1_in, std::complex<double> La2_in, std::complex<double> La3_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,3>(g_in, Yu_in, Yd_in, Ye_in, 1) { La << La1_in, La2_in, La3_in; };
- nsm(const base<3,3> &X) : base<3,3>(X) {};
+   public:
+    nsm() : base<3,3>() {};
+
+    nsm(const gauge<3> g_in, const std::complex<double> La1_in,
+      const std::complex<double> La2_in, const std::complex<double> La3_in,
+      const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in)
+      : base<3,3>(g_in, Yu_in, Yd_in, Ye_in, 1)
+      { La << La1_in, La2_in, La3_in; };
+
+    nsm(const base<3,3> &X) : base<3,3>(X) {};
  
-  // contains the RGEs
-  void operator()(const nsm &X, nsm &dX, const double);
-};
+    // contains the RGEs
+    void operator()(const nsm &X, nsm &dX, const double);
+  };
 \end{lstlisting}
 The first line lets the \texttt{nsm} class inherit the properties of the \texttt{base} class specifying the number of gauge couplings (3) and the number of scalar couplings (also 3: $\lambda_1$, $\lambda_2$, $\lambda_3$).
 After the \texttt{public} statement three constructors are defined. The first one, setting all couplings to 0, is inherited from \texttt{base}.
@@ -690,19 +758,23 @@ After the class definition there is an additional piece of code copied from \tex
 
 Now we are ready to set up the actual RGEs in the file \texttt{nsm.cpp}. Again, for the gauge and Yukawa couplings we can simply copy the SM ones from from \texttt{sm.cpp}. The code that needs some further adjustments is marked with a comment reading \texttt{NEW CODE}. The RGEs for the scalar couplings read
 \begin{lstlisting}
-    self<3> La2 = X.La.cwiseAbs2();
-    
-    dX.La[0] = loopfactor*((12.)*X.La[0]*Yd2Tr + (-24.)*Yd4Tr + (4.)*X.La[0]*Ye2Tr + (-8.)*Ye4Tr + (12.)*X.La[0]*Yu2Tr + (-24.)*Yu4Tr + (-9./5.)*X.La[0]*g2[0] + (-9.)*X.La[0]*g2[1] + (9./5.)*g2[0]*g2[1] + (27./50.)*g4[0] + (9./2.)*g4[1]
-			   + 6.*La2[0] + 6.*La2[1]);
-    dX.La[1] = loopfactor*( 4.*X.La[0]*X.La[1] + 4.*X.La[1]*X.La[2] );
-    dX.La[2] = loopfactor*( 6.*La2[2] + 6.*La2[1]);
+  self<3> La2 = X.La.cwiseAbs2();
+
+  dX.La[0] = loopfactor*((12.)*X.La[0]*Yd2Tr + (-24.)*Yd4Tr
+             + (4.)*X.La[0]*Ye2Tr + (-8.)*Ye4Tr + (12.)*X.La[0]*Yu2Tr
+             + (-24.)*Yu4Tr + (-9./5.)*X.La[0]*g2[0]
+             + (-9.)*X.La[0]*g2[1] + (9./5.)*g2[0]*g2[1]
+             + (27./50.)*g4[0] + (9./2.)*g4[1]
+             + 6.*La2[0] + 6.*La2[1]);
+  dX.La[1] = loopfactor*( 4.*X.La[0]*X.La[1] + 4.*X.La[1]*X.La[2] );
+  dX.La[2] = loopfactor*( 6.*La2[2] + 6.*La2[1]);
 \end{lstlisting}
-The first line defines a convenient abbreviation for the modulus squared of the vector self-couplings \texttt{La}. The second line resembles the RGE for $\lambda_1$. The part that stems from the interactions with the SM particles is, of course, the same as in \texttt{sm.cpp}. But there is an additional term from diagrams where singlet scalars appear in the loops. The next two lines contain the RGEs of $\lambda_1$ and $\lambda_2$. We further deleted all higher loop orders that appear in \texttt{sm.cpp} for the sake of transparency.
+The first line defines a convenient abbreviation for the modulus squared of the vector self-couplings \texttt{La}. The second assignment resembles the RGE for $\lambda_1$. The part that stems from the interactions with the SM particles is, of course, the same as in \texttt{sm.cpp}. But there is an additional term from diagrams where singlet scalars appear in the loops. The next two assignments contain the RGEs of $\lambda_1$ and $\lambda_2$. We further deleted all higher loop orders that appear in \texttt{sm.cpp} for the sake of transparency.
 
 The application of this model is demonstrated in the \texttt{nsm\_example.cpp} file which is an adapted version of \texttt{sm\_example.cpp}. Upon compilation and running the command line prompt should look like
 \begin{lstlisting}
-   nSM parameters at  1000 GeV:
-   Higgs selfcouplings: (0.65818637,0)  (1.0515135,0) (0.19774487,0)
+  nSM parameters at  1000 GeV:
+  Higgs selfcouplings: (0.65818637,0)  (1.0515135,0) (0.19774487,0)
 \end{lstlisting}
 Note that the numbers are chosen arbitrarily for demonstration purposes.
 
@@ -717,9 +789,7 @@ We thank a number of people for testing the code, as well as some more people fo
 This research was supported by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under grant 396021762 - TRR 257 "Particle Physics Phenomenology after the Higgs Discovery".
 FH acknowledges the support by the Doctoral School "Karlsruhe School of Elementary and Astroparticle Physics: Science and Technology".
 
-\bibliography{literature}{}
-\bibliographystyle{hunsrt}
-
+\printbibliography
 \end{document}
 
 %%% Local Variables:
