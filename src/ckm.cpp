@@ -65,10 +65,10 @@ Vector3d ckm::get_downmasses() {
 
 Vector3d ckm::get_upmasses(const double tanb) {  // one argument: two Higgs doublets
   if (upyuk[0]==0.) calculate();
-  return cos(atan(tanb))*vev*upyuk;
+  return sin(atan(tanb))*vev*upyuk;
 }
 
 Vector3d ckm::get_downmasses(const double tanb) {
   if (downyuk[0]==0.) calculate();
-  return sin(atan(tanb))*vev*downyuk;
+  return cos(atan(tanb))*vev*downyuk;
 }
