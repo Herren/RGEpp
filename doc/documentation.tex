@@ -81,10 +81,10 @@ Florian Herren$^{\, a}$ \footnote{Corresponding Author, E-mail: \texttt{florian.
 
 \begin{abstract}
 In recent years three-, four- and five-loop beta functions have been computed for various phenomenologically interesting models.
-However, most of these results have not been implemented in easy to use program packages. \texttt{RGE++} tries
-to bridge this gap by providing a flexible, template-based, \texttt{C++} library to solve renormalisation group equations.
+However, most of these results have not been implemented in easy to use software packages. \texttt{RGE++} bridges
+this gap by providing a flexible, template-based, \texttt{C++} library to solve renormalisation group equations.
 Furthermore, we implement the available beta functions for the Standard Model, the minimal supersymmetric
-extension of the Standard Model, two-Higgs-doublet models, as well as right-handed Neutrino extensions of the former two.
+extension of the Standard Model and two-Higgs-doublet models, as well as right-handed Neutrino extensions of the former two.
 \end{abstract}
 
 \end{titlepage}
@@ -107,16 +107,18 @@ Grand Unified Theories by extrapolating the measured couplings at low scales to 
 of SUSY spectra from high-scale input.
 
 Usually, Eq.~(\ref{eq::beta}) is solved numerically and over the years many public programs appeared which implement
-anomalous dimensions and beta functions of various models. Most of them implement more features than what is the scope of \texttt{RGE++}, but are rather specific to a certain model. 
-Here we provide a short overview of programs or libraries which are relevant in the context of RGEs:
-For pure QCD at the highest perturbative orders availabe there is \texttt{(C)RunDec} \cite{Chetyrkin:2000yt,Schmidt:2012az,Herren:2017osy}, \texttt{SMDR} \cite{Martin:2019lqd} and \texttt{mr} \cite{Kniehl:2016enc}
+anomalous dimensions and beta functions of various models. Most of them implement more features than the scope of \texttt{RGE++}, but are rather specific to a certain model. 
+Here we provide a short overview of programs or libraries which are relevant in the context of renormalization group equations (RGEs):
+For pure QCD at the highest perturbative orders available there is \texttt{(C)RunDec} \cite{Chetyrkin:2000yt,Schmidt:2012az,Herren:2017osy}, \texttt{SMDR} \cite{Martin:2019lqd} and \texttt{mr} \cite{Kniehl:2016enc}, which
 implement running and matching relations in the full Standard Model,
 while REAP \cite{Antusch:2005gp} implements beta functions in the SM, MSSM and 2HDMs including right-handed neutrinos. For supersymmetric theories there is a plethora of spectrum generators,
-which all implement various models, such as \texttt{SOFTSUSY} \cite{Allanach:2001kg}, \texttt{SuSpect} \cite{Djouadi:2002ze}, \texttt{SPheno} \cite{Porod:2003um,Porod:2011nf}, Flexible SUSY \cite{Athron:2014yba,Athron:2017fvs}. Furthermore, there are programs implementing the general two-loop beta functions \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw}, such
+which all implement various models, such as \texttt{SOFTSUSY} \cite{Allanach:2001kg}, \texttt{SuSpect} \cite{Djouadi:2002ze}, \texttt{SPheno} \cite{Porod:2003um,Porod:2011nf},
+Flexible SUSY \cite{Athron:2014yba,Athron:2017fvs}. Furthermore, there are programs implementing the general two-loop beta functions
+\cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw,Jack:1982hf,Jack:1982sr,Jack:1984vj} and anomalous dimensions of the dimensionful couplings \cite{Luo:2002ti,Sartore:2020pkk}, such
 as \texttt{SARAH} \cite{Staub:2013tta} or PyR@TE \cite{Lyonnet:2016xiz,Sartore:2020gou}.
 
-The goal of \texttt{RGE++} is much simpler: provide an easy to use, template-based \texttt{C++} class library, capable of solving rather generic
-beta functions, which can be used from within other programs. Furthermore, we want to provide various higher-order results, since many of
+The goal of \texttt{RGE++} is much simpler: to provide an easy to use, template-based \texttt{C++} class library, capable of numerically solving rather generic
+RGEs, which can be used from within other programs. Furthermore, we want to provide various higher-order results, since many of
 the aforementioned programs only implement the relevant beta functions and anomalous dimension up to two loops. 
 
 Given recent developments
@@ -125,7 +127,7 @@ of the gauge coupling beta functions in the SM at four loops \cite{Davies:2019on
 gauge and three-loop Yukawa coupling beta functions, we can expect a plethora of new results for various models. A flexible code such as \texttt{RGE++}
 will be able to incorporate such new results quickly.
 
-The remainder of this paper is structured as follows: In Section \ref{sec::manual} we present the base classes and discuss the implemented models.
+The remainder of this paper is structured as follows: In Section \ref{sec::manual} we present the base classes and discuss the models implemented.
 Section \ref{sec::examples} showcases the usage of \texttt{RGE++} with four examples.
 A brief summary, as well as an outlook on further developments can be found in \ref{sec::sum}.
 
@@ -138,7 +140,7 @@ and fix the conventions. We conclude with documenting auxiliary functions in Sec
 
 \subsection{\label{sec::installation}Installation and usage}
 The code can be obtained from \url{https://github.com/Herren/RGEpp} and is structured as follows: the folders \texttt{include} and \texttt{src} contain the header and source files of the basic classes, respectively.
-\texttt{models} contains the code for all implemented models, while \texttt{examples} contains the code for various examples, including the ones documented in the following.
+\texttt{models} contains the code for all implemented models, while \texttt{examples} contains the code for various examples, including those documented in the following.
 
 To use \texttt{RGE++} an installation of the libraries \texttt{Eigen3} \cite{eigenweb} and \texttt{odeint} \cite{Ahnert:2011} is necessary.
 \texttt{Eigen3} provides template-based implementations of vector and matrix classes. \texttt{odeint} implements standard algorithms for numerically solving differential equations
@@ -154,21 +156,21 @@ The source code of \texttt{RGE++} is distributed over four folders:
 \item \texttt{examples}: contains examples showcasing the use of \texttt{RGE++}
 \end{itemize}
 
-All models are derived from two template classes with flexible number of gauge and quartic couplings: \texttt{base} and \texttt{nubase}. The latter extends the former by additional matrices to account for neutrino Yukawa couplings
+All models are derived from two template classes with a flexible number of gauge and quartic couplings: \texttt{base} and \texttt{nubase}. The latter extends the former by additional matrices to account for neutrino Yukawa couplings
 and Majorana masses. Both template classes provide all routines and operators for solving the RGEs numerically using \texttt{odeint}.
 
 Specific models are derived from either of the two base classes and implement the operator
 \begin{lstlisting}
       void operator()(const class & X, class & dX, const double)
 \end{lstlisting}
-This operator is called by \texttt{odeint} at each step of the numerical integration writing the derivative of \texttt{X} into \texttt{dX}.
+This operator is called by \texttt{odeint} at each step of the numerical integration, writing the derivative of \texttt{X} into \texttt{dX}.
 Thus for each model, this operator needs to implement the beta functions of the model. A more detailed discussion is given in Sec.~\ref{sec::examples}.
 
 \subsection{\label{sec::overview}Overview of implemented models}
 \texttt{RGE++} implements the SM beta functions for gauge couplings, Yukawa matrices and the scalar quartic coupling up to three loops \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw,
                                Mihaila:2012fm,Mihaila:2012pz,Bednyakov:2012rb,Chetyrkin:2012rz,Bednyakov:2012en,Bednyakov:2014pia,Herren:2017uxn,Chetyrkin:2013wya,Bednyakov:2013eba,Bednyakov:2013cpa}.
 Furthermore, the four-loop corrections to the gauge coupling beta functions \cite{Davies:2019onf} are available\footnote{Note that in \cite{Davies:2019onf} only third generation Yukawa couplings are taken into account.}.
-Non-supersymmetric extensions implemented are the SM including right-handed neutrinos at two-loop order \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw, Antusch:2005gp, Grzadkowski:1987tf}, as well as
+The non-supersymmetric extensions implemented are the SM including right-handed neutrinos at two-loop order \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw, Antusch:2005gp, Grzadkowski:1987tf}, as well as
 the $\mathbb{Z}_2$-symmetric two-Higgs-doublet models at three-loop order for gauge coupling and Yukawa matrices and two-loop order for the quartic couplings
 \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw, Herren:2017uxn, Chowdhury:2015yja}.
 The beta functions for the minimal supersymmetric extension of the SM are implemented up to three-loop order \cite{Martin:1993zk,Ferreira:1996ug} and its extension with right-handed (s)neutrinos at two-loop order
@@ -282,7 +284,7 @@ To this end, the class \texttt{nubase} implements the function
   void integrate_out(int n);
 \end{lstlisting}
 which integrates out the $n^\mathrm{th}$ generation (counting from zero) of right-handed neutrinos. 
-Afterwards, the $n^\mathrm{th}$ row of $Y_n$ (counting from zero) is set to zero.
+Afterwards, the $n^\mathrm{th}$ row of $Y_\nu$ (counting from zero) is set to zero.
 In addition, 
 \begin{lstlisting}
   Eigen::Vector3d logthresholds();
@@ -322,7 +324,7 @@ Furthermore, \texttt{sm} provides the operator
 \end{lstlisting}
 which is implemented in \texttt{sm.cpp}. This operator contains the actual implementation of the beta functions and is called by the \texttt{odeint} routines when running from one scale to another.
 
-In the implementation of the beta functions, the 'right-left-convention' for the Yukawa interactions is used
+In the implementation of the beta functions, the `right-left-convention' for the Yukawa interactions is used
 \begin{equation} \label{eq:sm_yuk}
     \mathcal{L}_{\mathrm{Yukawa}}^{\mathrm{SM}} = - Y_e^{ij}\; \overline{e_{R}}_{i} \, \phi^\dagger \cdot L_j
   - Y_d^{ij}\; \overline{d_{R}}_{i} \, \phi^\dagger \cdot Q_j
@@ -353,7 +355,7 @@ A Type-I 2HDM, for example, can be initialized by
 \end{lstlisting}
 The only difference w.r.t. the SM case is that the self-couplings now form a vector.
 
-Like in the SM case, we use the 'right-left-convention' and take $\phi_2$ to be the SM-like doublet. So in the Type-I 2HDM
+Like in the SM case, we use the `right-left-convention' and take $\phi_2$ to be the SM-like doublet. So in the Type-I 2HDM
 \begin{equation} \label{eq:thdm_yuk}
     \mathcal{L}_{\mathrm{Yukawa}}^{\mathrm{2HDM,I}} = - Y_e^{ij}\; \overline{e_{R}}_{i} \, \phi_2^\dagger \cdot L_j
   - Y_d^{ij}\; \overline{d_{R}}_{i} \, \phi_2^\dagger \cdot Q_j
@@ -396,7 +398,7 @@ Thus all entries of \texttt{La} are set to zero at construction.
 
 The Yukawa couplings are fixed by the superpotential
 \begin{equation} \label{eq:mssm_yuk}
-  \mathcal{W_\mathrm{Yukawa}}^{\mathrm{MSSM}} = Y_e^{ij} \; {e_R}_i\, H_1\cdot \varepsilon \cdot L_j \quad + Y_d^{ij} \; {d_R}_i \, H_1\cdot \varepsilon \cdot Q_j + Y_u^{ij} \; {u_R}_i \, \cdot Q_j\cdot \varepsilon \cdot H_2 \;,
+  \mathcal{W_\mathrm{Yukawa}}^{\mathrm{MSSM}} = Y_e^{ij} \; {e_R}_i\, H_1\cdot \varepsilon \cdot L_j \quad + Y_d^{ij} \; {d_R}_i \, H_1\cdot \varepsilon \cdot Q_j + Y_u^{ij} \; {u_R}_i \, \cdot Q_j\cdot \varepsilon \cdot H_2 \;.
 \end{equation} 
 
 \paragraph{nusm.h}
@@ -432,7 +434,7 @@ implements the class \texttt{numssm} which is derived as \texttt{public} from \t
 \end{lstlisting}
 The conventions for the Yukawa couplings are thes same as in eq.~\eqref{eq:mssm_yuk}. For \texttt{Yn, Ka, Mn} we have
 \begin{equation} \label{eq:mssm_nu}
-    \mathcal{W}_{N} = \frac{1}{2}\, M^{ij}\; N_i\, N_j + Y_\nu^{ij}\; N_i\, L_j \cdot \varepsilon^T \cdot H_2 -\frac{\kappa^{ij}}{4} \bigl(L_i\cdot \varepsilon \cdot H_2\bigr) \bigl(L_j\cdot \varepsilon \cdot H_2\bigr)
+    \mathcal{W}_{N} = \frac{1}{2}\, M^{ij}\; N_i\, N_j + Y_\nu^{ij}\; N_i\, L_j \cdot \varepsilon^T \cdot H_2 -\frac{\kappa^{ij}}{4} \bigl(L_i\cdot \varepsilon \cdot H_2\bigr) \bigl(L_j\cdot \varepsilon \cdot H_2\bigr)\;.
 \end{equation}
 As in the MSSM, all entries of \texttt{La} are set to zero at construction.
 
@@ -463,7 +465,7 @@ Access to the results is given by the member functions
 \end{lstlisting}
 The convention for the CKM matrix is chosen such that
 \begin{equation}
-  Y_d = \operatorname{diag}(y_d,y_s,y_b)\, V_{\mathrm{CKM}}^\dagger\;,
+  Y_d = \operatorname{diag}(y_d,y_s,y_b)\,\cdot V_{\mathrm{CKM}}^\dagger\;,
 \end{equation}
 in the flavour basis where $Y_u$ is diagonal. The CKM parameters are defined as in the PDG \cite{Patrignani:2016xqp}.
 
@@ -492,7 +494,7 @@ Access to the results is given by the member functions
 \end{lstlisting}
 The convention for the PMNS matrix is chosen such that
 \begin{equation}
-  V_{\mathrm{PMNS}}^T m_\nu V_{\mathrm{PMNS}}
+  V_{\mathrm{PMNS}}^T \cdot m_\nu \cdot V_{\mathrm{PMNS}}
 \end{equation}
 diagonalises $m_\nu$ in the flavour basis where $Y_e$ is diagonal. The PMNS parameters are defined as in the 'standard convention' \cite{Patrignani:2016xqp}.
 
@@ -505,14 +507,14 @@ The template function\texttt{rundown} provides routines that simplify the numeri
 \texttt{Stepper} needs to be of \texttt{odeint} Error Stepper type, e.g. \texttt{runge\_kutta\_fehlberg78}. See the examples in Section~\ref{sec::examples} or the \texttt{odeint} documentation for greater detail. \texttt{Model} refers to an \texttt{RGE++} model (\texttt{sm}, \texttt{mssm}, \texttt{tdhmi/ii/x/y}, \texttt{nusm}, \texttt{numssm}) and \texttt{state} to an instantation thereof. \texttt{Observer} is a struct or class that provides an operator of the form \texttt{void operator()(const \& Model, double t)} that is called at each step of the numerical integration providing access to intermediate results. A possible example is given in \texttt{numssm\_example.cpp}. \texttt{Observer} can also be \texttt{void}, if intermediate results are not necessary.
 
 \texttt{start} and \texttt{end} denote the starting point $\log\mu_{\mathrm{start}}$ and end point $\log\mu_{\mathrm{end}}$ of the numerical integration. If \texttt{start} $>$ \texttt{end}, i.e. when going from higher to lower renormalization scales, \texttt{rundown} will determine the thresholds at which particles need be integrated out using the \texttt{logthresholds()} functionality of \texttt{Model}. At these thresholds \texttt{rundown} will integrate out particles by using the \texttt{integrate\_out(int)} member function of \texttt{Model}. If \texttt{end} $<$ \texttt{start}, i.e. when going towards higher renormalization scales, no particles are integrated out.\\
-\texttt{error} controls the numerical error at each step of the inegration. If no value is given \texttt{error} defaults to $10^{-10}$. \texttt{firststep} defines the size of the first step of the integration. The default value is $0.01$. From the second integrational step onwards, the step size is adjusted by the algorithms of \texttt{odeint} based on the value of \texttt{error}.
+\texttt{error} controls the numerical error at each step of the inegration. If no value is given \texttt{error} defaults to $10^{-10}$. \texttt{firststep} defines the size of the first step of the integration. The default value is $0.01$. From the second integration step onwards, the step size is adjusted by the algorithms of \texttt{odeint} based on the value of \texttt{error}.
 
 \section{\label{sec::examples}Examples and usage}
 In the following, we discuss the basic usage of models implemented in \texttt{RGE++} to evolve parameters from one scale to another.
 
 
 \subsection{\label{sec::sm_example} A SM example}
-In \texttt{sm\_example.cpp} the parameters of the SM are given at the Z-boson mass and we employ the beta functions to extrapolate them to higher energy scales. 
+In \texttt{sm\_example.cpp} the parameters of the SM are given at the Z-Boson mass and we employ the beta functions to extrapolate them to higher energy scales. 
 To build the example call \texttt{make sm\_example} from the main folder.
 The first two lines of the \texttt{main} function parse the options given to the program via the command line. The first argument denotes the final renormalisation scale. If no argument is given it defaults to 3000 GeV. The
 second argument stands for the number of loops included in the beta functions. It defaults to 2 but can be chosen to be as high as 4, as the gauge coupling beta functions are implemented at this order,
@@ -593,7 +595,7 @@ The SM parameters at 5000 GeV using three-loop accuracy can e.g. be obtained by 
 \end{lstlisting}
 
 \subsection{\label{sec::sm_plot_example} SM example suitable for plotting}
-A further SM example is given in \texttt{running\_plot.cppp}. It can be build by invoking \texttt{make running\_plot} from the main folder.
+A further SM example is given in \texttt{running\_plot.cpp}. It can be built by invoking \texttt{make running\_plot} from the main folder.
 The setup is similar as in the previous example, however, instead of an adaptive stepsize, it uses a constant one.
 In this case, the integration is performed by
 \begin{lstlisting}
@@ -629,7 +631,7 @@ It is implemented as
 and prints the $\alpha_i = g_i^2/\left(4\pi\right)$ to standard output.
 
 In \cite{Davies:2019onf} it was observed, that the four-loop contributions to the
-beta function of the stroung coupling, $\beta_3$, is larger than the three-loop contributions by a factor of 1.27 for $\mu = M_Z$. This seemingly bad perturbative convergence
+beta function of the strong coupling, $\beta_3$, is larger than the three-loop contributions by a factor of 1.27 for $\mu = M_Z$. This seemingly bad perturbative convergence
 is due to an accidental cancellation in the three-loop terms\cite{Davies:2019onf}, which is not present in the four-loop terms. Using the code of this example, this can be seen from Fig.~\ref{plt::delta}, where the dependence of
 \begin{align}
 \Delta = \frac{|\alpha_3^{(4l)} - \alpha_3^{(3l)}|}{|\alpha_3^{(3l)} - \alpha_3^{(2l)}|}
@@ -685,9 +687,9 @@ This time, however, we will use the \texttt{rundown} template which not only per
 \begin{lstlisting}
   rundown<stepper,numssm,void> foo(values, log(MGUT), log(MZ));
 \end{lstlisting}
-Note, that although the name suggests otherwise, \texttt{rundown} works 'both ways', i.e. both from the high to the low as well as from the low to high renormalisation scale. Only when evolving to a lower renormalisation scale, however, it will check for thresholds and integrate out the relevant particles using the \texttt{integrate\_out()} routine of the respective model (\texttt{numssm} in this case).
+Note, that although the name suggests otherwise, \texttt{rundown} works `both ways', i.e. both from the high to the low as well as from the low to high renormalisation scale. Only when evolving to a lower renormalisation scale, however, it will check for thresholds and integrate out the relevant particles using the \texttt{integrate\_out()} routine of the respective model (\texttt{numssm} in this case).
   
-Since the MSSM contains two Higgs doublets, also the ratio of the respective vevs $\tan\beta = v_2 / v_1$ has to be defined in order to calculate the fermion masses.
+Since the MSSM contains two Higgs doublets, also the ratio of the respective vacuum expectation values (vevs), $\tan\beta = v_2 / v_1$, has to be defined in order to calculate the fermion masses.
 \begin{lstlisting}
   double tanb(60.);
 \end{lstlisting}
@@ -718,8 +720,8 @@ The complete output should then look like
   charged lepton massess  (GeV): 0.0025152  0.095236    1.3424
 \end{lstlisting}    
 
-\subsection{\label{sec::adding} Adding Own Models}
-In this example we outline the necessary steps for implementing own models. As an example, we implement the RGEs for the SM with an additional singlet scalar field $s$ such that the scalar sector of the theory takes the form
+\subsection{\label{sec::adding} Adding additional Models}
+In this example we outline the necessary steps for implementing additional models. As an example, we implement the RGEs for the SM with an additional singlet scalar field $s$ such that the scalar sector of the theory takes the form
 \begin{equation} \label{eq:nsm_la}
   \mathcal{L}_{\mathrm{self}} = -\frac{\lambda_1}{4} (\phi^\dagger\phi)^2  -\frac{\lambda_2}{2} (\phi^\dagger\phi)\ (s^\dagger s)   -\frac{\lambda_3}{4} (s^\dagger s)^2 ,
 \end{equation}
@@ -749,7 +751,7 @@ Let us start this example with the header file \texttt{nsm.h} in the \texttt{mod
 \end{lstlisting}
 The first line lets the \texttt{nsm} class inherit the properties of the \texttt{base} class specifying the number of gauge couplings (3) and the number of scalar couplings (also 3: $\lambda_1$, $\lambda_2$, $\lambda_3$).
 After the \texttt{public} statement three constructors are defined. The first one, setting all couplings to 0, is inherited from \texttt{base}.
-The second one allows to construct an \texttt{nsm} object using three complex variables as input for $\lambda_1$, $\lambda_2$, $\lambda_3$ in addition to the Yukawa couplings,
+The second one allows one to construct an \texttt{nsm} object using three complex variables as input for $\lambda_1$, $\lambda_2$, $\lambda_3$ in addition to the Yukawa couplings,
 which are then stored in the vector of self-couplings \texttt{La}.
 In this example, we will only consider one-loop RGEs, thus the variable (\texttt{nloops}) is set to one.
 For the function \texttt{void operator()} only the type of the input parameters has been changed in comparison to \texttt{sm.h}.
@@ -785,7 +787,7 @@ We provide three examples showcasing the usage and discuss the implemented class
 The template-based structure gives the user the flexibility to implement higher-order corrections or new models easily.
 
 \section*{Acknowledgements}
-We thank a number of people for testing the code, as well as some more people for careful reading of the manuscript.
+We thank Joshua Davies, Marvin Gerlach and Martin Lang for testing the code, as well as Josha Davies, Matthias Steinhauser and Anders Eller Thomsen for careful reading of the manuscript.
 This research was supported by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under grant 396021762 - TRR 257 "Particle Physics Phenomenology after the Higgs Discovery".
 FH acknowledges the support by the Doctoral School "Karlsruhe School of Elementary and Astroparticle Physics: Science and Technology".
 
