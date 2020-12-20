@@ -69,12 +69,16 @@ P3H-20-XXX
 \begin{center}
 { \bf\LARGE \texttt{RGE++}\\ A \texttt{C++} library to solve renormalisation group equations in quantum field theory}
 \\[8mm]
-Thomas Deppisch$^{\, a}$, \footnote{E-mail: \texttt{thdeppisch@gmail.com}} 
-Florian Herren$^{\, a}$ \footnote{Corresponding Author, E-mail: \texttt{florian.herren@kit.edu}}
+Thomas Deppisch$^{\, a}$ \footnote{E-mail: \texttt{thomas.deppisch@dwd.de}} ,
+Florian Herren$^{\, b}$ \footnote{Corresponding Author, E-mail: \texttt{florian.herren@kit.edu}}
 \\[1mm]
 \end{center}
 \vspace*{0.50cm}
-\centerline{$^{a}$ \it Institut f\"ur Theoretische Teilchenphysik}
+\centerline{$^{a}$ \it German Weather Service (DWD)}
+\centerline{\it Research and Development --- Data Assimilation}
+\centerline{\it Frankfurter Stra\ss{}e 135, D-73067 Offenbach am Main, Germany}
+\vspace*{0.2cm}
+\centerline{$^{b}$ \it Institut f\"ur Theoretische Teilchenphysik}
 \centerline{\it Karlsruhe Institute of Technology (KIT)}
 \centerline{\it Wolfgang-Gaede-Stra\ss{}e 1, D-76128 Karlsruhe, Germany}
 \vspace*{0.2cm}
@@ -133,7 +137,10 @@ A brief summary, as well as an outlook on further developments can be found in \
 
 
 \section{\label{sec::manual}The RGE++ classes and functions}
-In this section we discuss the functionality of \texttt{RGE++} and its implementation. First, in Sec.~\ref{sec::installation}, we describe the installation and the dependencies of \texttt{RGE++},
+In this section we discuss the functionality of \texttt{RGE++} and its implementation. Readers who are more interested in actual examples are encouraged to skip ahead to
+Section \ref{sec::examples} and come back to this section afterwards.
+
+First, in Sec.~\ref{sec::installation}, we describe the installation and the dependencies of \texttt{RGE++},
 followed by a brief overview about the implemented models in Sec.~\ref{sec::overview}.
 The description of the base classes all models are derived from can be found in Sec.~\ref{sec::base}. In Sec.~\ref{sec::models} we discuss the implementation of the various models
 and fix the conventions. We conclude with documenting auxiliary functions in Sec.~\ref{sec::auxiliary}.
@@ -393,7 +400,7 @@ implements the class \texttt{mssm}, which is derived as \texttt{public} from \te
  
   mssm(const base<3,0> &X) : base<3,0>(X) {};
 \end{lstlisting}
-Note, that in the case of the MSSM, there are no quartic self-couplings of the scalars, which are not determined in terms of other couplings.
+Note, that in the case of the MSSM, all quartic self-couplings of the scalars are determined by other couplings, namely gauge and Yukawa coupligs.
 Thus all entries of \texttt{La} are set to zero at construction.
 
 The Yukawa couplings are fixed by the superpotential
@@ -448,7 +455,7 @@ A \texttt{ckm} object can be constructed by
   ckm(const yukawa Yuin, const yukawa Ydin, const double vevin);
       // sets Yu, Yd and the vev
 \end{lstlisting}
-The routines the extract the quark observables from the Yukawa matrices are called by
+The routines that extract the quark observables from the Yukawa matrices are called by
 \begin{lstlisting}
   void calculate();
 \end{lstlisting}
@@ -468,6 +475,12 @@ The convention for the CKM matrix is chosen such that
   Y_d = \operatorname{diag}(y_d,y_s,y_b)\,\cdot V_{\mathrm{CKM}}^\dagger\;,
 \end{equation}
 in the flavour basis where $Y_u$ is diagonal. The CKM parameters are defined as in the PDG \cite{Patrignani:2016xqp}.
+The functions \verb|get_upmasses| and \verb|get_downmasses| are overloaded to also support models where the down-type quarks couple to another Higgs doublet than the up-type quarks,
+such as the MSSM or the type-II 2HDM. To this end, the ratio between the two vacuum expectation values (vevs) of the two Higgs doublets
+\begin{equation}
+\tan\beta = \frac{v_2}{v_1}
+\end{equation}
+can be provided as an argument. Here $v_1$ is the vev of the doublet coupling to the down-type quarks and $v_2$ the vev of the doublet coupling to the up-type quarks.
 
 \paragraph{pmns.h}
 implements the class \texttt{pmns} which can be constructed by
@@ -515,7 +528,27 @@ In the following, we discuss the basic usage of models implemented in \texttt{RG
 
 \subsection{\label{sec::sm_example} A SM example}
 In \texttt{sm\_example.cpp} the parameters of the SM are given at the Z-Boson mass and we employ the beta functions to extrapolate them to higher energy scales. 
-To build the example call \texttt{make sm\_example} from the main folder.
+To build the example call \texttt{make sm\_example} from the main folder. Then, the program can be called from the command line via
+\begin{lstlisting}
+  /examples/sm_example
+\end{lstlisting}
+Since we have not given any additional options to the program the output should look like
+\begin{lstlisting}
+  SM parameters at 3000 GeV and 2 loops:
+  gauge couplings: 0.47077 0.63383  1.0008
+  up-type yukawas: 6.3691e-06   0.002976    0.83158
+  down-type yukawas: 1.3614e-05 0.00025413   0.013092
+  charged lepton yukawas: 2.8666e-06 0.00060516   0.010287
+  ckm parameters:   0.22704 0.0038204  0.043031     1.143
+  Higgs selfcoupling: (0.50749,-8.5389e-59)
+\end{lstlisting}
+This example program also accepts other choices of the energy scale or the loop orders which should be used for running the parameters.
+The SM parameters at, e.g., 5000 GeV using three-loop accuracy can be obtained by calling
+\begin{lstlisting}
+  /examples/sm_example 5000 3
+\end{lstlisting}
+
+Having established the general idea of the example, we are now in the position to discuss the corresponding source code.
 The first two lines of the \texttt{main} function parse the options given to the program via the command line. The first argument denotes the final renormalisation scale. If no argument is given it defaults to 3000 GeV. The
 second argument stands for the number of loops included in the beta functions. It defaults to 2 but can be chosen to be as high as 4, as the gauge coupling beta functions are implemented at this order,
 \begin{lstlisting}
@@ -575,24 +608,7 @@ They can be accessed as shown in the final lines of the example
   std::cout << "up-type yukawas: "
             << quarks.get_upyukawas().transpose() << std::endl;
 \end{lstlisting}
-The program can be called from the command line via
-\begin{lstlisting}
-  /examples/sm_example
-\end{lstlisting}
-Since we have not given any additional options to the program the output should look like
-\begin{lstlisting}
-  SM parameters at 3000 GeV and 2 loops:
-  gauge couplings: 0.47077 0.63383  1.0008
-  up-type yukawas: 6.3691e-06   0.002976    0.83158
-  down-type yukawas: 1.3614e-05 0.00025413   0.013092
-  charged lepton yukawas: 2.8666e-06 0.00060516   0.010287
-  ckm parameters:   0.22704 0.0038204  0.043031     1.143
-  Higgs selfcoupling: (0.50749,-8.5389e-59)
-\end{lstlisting}
-The SM parameters at 5000 GeV using three-loop accuracy can e.g. be obtained by calling
-\begin{lstlisting}
-  ./examples/sm_example 5000 3
-\end{lstlisting}
+
 
 \subsection{\label{sec::sm_plot_example} SM example suitable for plotting}
 A further SM example is given in \texttt{running\_plot.cpp}. It can be built by invoking \texttt{make running\_plot} from the main folder.
@@ -689,7 +705,7 @@ This time, however, we will use the \texttt{rundown} template which not only per
 \end{lstlisting}
 Note, that although the name suggests otherwise, \texttt{rundown} works `both ways', i.e. both from the high to the low as well as from the low to high renormalisation scale. Only when evolving to a lower renormalisation scale, however, it will check for thresholds and integrate out the relevant particles using the \texttt{integrate\_out()} routine of the respective model (\texttt{numssm} in this case).
   
-Since the MSSM contains two Higgs doublets, also the ratio of the respective vacuum expectation values (vevs), $\tan\beta = v_2 / v_1$, has to be defined in order to calculate the fermion masses.
+Since the MSSM contains two Higgs doublets, also the ratio of their respective vevs, $\tan\beta = v_2 / v_1$, has to be defined in order to calculate the fermion masses.
 \begin{lstlisting}
   double tanb(60.);
 \end{lstlisting}
@@ -787,7 +803,8 @@ We provide three examples showcasing the usage and discuss the implemented class
 The template-based structure gives the user the flexibility to implement higher-order corrections or new models easily.
 
 \section*{Acknowledgements}
-We thank Joshua Davies, Marvin Gerlach and Martin Lang for testing the code, as well as Josha Davies, Matthias Steinhauser and Anders Eller Thomsen for careful reading of the manuscript.
+We thank Joshua Davies, Marvin Gerlach and Matthias Linster for testing the code, as well as Josha Davies, Matthias Steinhauser and Anders Eller Thomsen for careful reading of the manuscript.
+TD would like to thank Martin Spinrath and Stefan Schacht for collaboration on the project initiating the development of \texttt{RGE++}.
 This research was supported by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under grant 396021762 - TRR 257 "Particle Physics Phenomenology after the Higgs Discovery".
 FH acknowledges the support by the Doctoral School "Karlsruhe School of Elementary and Astroparticle Physics: Science and Technology".
 
