@@ -18,13 +18,14 @@ In oder to connect the Yukawa matrices with physical observables, **RGE++** also
 
 ## Installation
 
-On a UNIX system, clone the git repository to a local directory on your system by typing
+On a UNIX system you first need to install boost, which is best done via the systems package manager.
+Then clone the git repository to a local directory on your system by typing
 
 ```
     git clone https://github.com/Herren/RGEpp.git
 ```
 
-In addition to that, you also need the Eigen3 and ODEint libraries to be installed on your system. You can obtain them via
+In addition to that, you also need the Eigen3 and up-to-date ODEint libraries to be installed on your system. You can obtain them via
 
 ```
     git clone https://github.com/boostorg/odeint.git
