@@ -5,6 +5,13 @@
 *.blg
 *.log
 *.out
+*.bcf
+*.run.xml
+*-blx.bib
+
+# Paths
+eigen
+odeint
 
 # Compiled objects
 *.o
