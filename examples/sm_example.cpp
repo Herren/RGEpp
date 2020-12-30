@@ -72,7 +72,7 @@ int main(int argc, char* argv[]){
 	    << "down-type yukawas: " << quarks.get_downyukawas().transpose() << std::endl
     	    << "charged lepton yukawas: " << leptons.get_elyukawas().transpose() << std::endl
 	    << "ckm parameters: " << quarks.get_CKMparameters().transpose() << std::endl
-	    << " Higgs selfcoupling: " << values.La[0] << std::endl
+	    << "Higgs quartic coupling: " << values.La[0] << std::endl
 	    << std::endl;
 
       
