@@ -28,10 +28,8 @@
   language=C,
   showstringspaces=false,
   basicstyle=\footnotesize\ttfamily,
-  morekeywords={sm,mssm,2hdm,nusm,numssm,gauge,yukawa,self,Model, Stepper, Observer,Eigen,std,complex,class,cout,endl,using,namespace,boost},
+  morekeywords={gauge,yukawa,self,Eigen,std,complex,class,cout,endl,using,namespace,boost,public,private,bool,template,typename},
   keywordstyle=\bfseries\color{green!40!black},
-  classoffset=1,
-  morekeywords={sm,mssm,2hdm,nusm,numssm},
   classoffset=0,
   commentstyle=\itshape\color{red!40!black},
   identifierstyle=\color{blue},
@@ -620,8 +618,8 @@ In this case, the integration is performed by
 where the last argument of \texttt{integrate\_const} is a structure with an overloaded operator \texttt{()} that gets called at each step.
 It is implemented as
 \begin{lstlisting}
-  struct write_out{
-    void operator()(const sm &x, double t ){
+  struct write_out {
+    void operator()(const sm &x, double t) {
 
       // calculate quark yukawas
       ckm quarks(x.Yu, x.Yd);
@@ -789,7 +787,7 @@ Now we are ready to set up the actual RGEs in the file \texttt{nsm.cpp}. Again, 
 The first line defines a convenient abbreviation for the modulus squared of the vector self-couplings \texttt{La}. The second assignment resembles the RGE for $\lambda_1$. The part that stems from the interactions with the SM particles is, of course, the same as in \texttt{sm.cpp}. But there is an additional term from diagrams where singlet scalars appear in the loops. The next two assignments contain the RGEs of $\lambda_1$ and $\lambda_2$. We further deleted all higher loop orders that appear in \texttt{sm.cpp} for the sake of transparency.
 
 The application of this model is demonstrated in the \texttt{nsm\_example.cpp} file which is an adapted version of \texttt{sm\_example.cpp}. Upon compilation and running the command line prompt should look like
-\begin{lstlisting}
+\begin{lstlisting}[keywordstyle=\color{blue}]
   nSM parameters at  1000 GeV:
   Higgs self-couplings: (0.65818637,0)  (1.0515135,0) (0.19774487,0)
 \end{lstlisting}
