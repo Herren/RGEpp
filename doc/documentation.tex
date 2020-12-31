@@ -28,7 +28,7 @@
   language=C,
   showstringspaces=false,
   basicstyle=\footnotesize\ttfamily,
-  morekeywords={sm,mssm,2hdm,nusm,numssm,gauge,yukawa,self,Model, Stepper, Observer, Eigen::Vector3d},
+  morekeywords={sm,mssm,2hdm,nusm,numssm,gauge,yukawa,self,Model, Stepper, Observer,Eigen,std,complex,class,cout,endl,using,namespace,boost},
   keywordstyle=\bfseries\color{green!40!black},
   classoffset=1,
   morekeywords={sm,mssm,2hdm,nusm,numssm},
@@ -88,7 +88,7 @@ In recent years three-, four- and five-loop beta functions have been computed fo
 However, most of these results have not been implemented in easy to use software packages. \texttt{RGE++} bridges
 this gap by providing a flexible, template-based, \texttt{C++} library to solve renormalisation group equations.
 Furthermore, we implement the available beta functions for the Standard Model, the minimal supersymmetric
-extension of the Standard Model and two-Higgs-doublet models, as well as right-handed Neutrino extensions of the former two.
+extension of the Standard Model and two-Higgs-doublet models, as well as right-handed neutrino extensions of the former two.
 \end{abstract}
 
 \end{titlepage}
@@ -107,8 +107,8 @@ where the $g_i$ denote any dimensionless coupling of the theory under considerat
 all couplings of the theory.
 Beta functions play a crucial role in connecting parameters at different scales, for example when comparing measurements of the
 strong coupling constant at different energy scales at the Z-Boson mass $\mu = M_Z$. Other applications include the study of
-Grand Unified Theories by extrapolating the measured couplings at low scales to the unification scale or the generation
-of SUSY spectra from high-scale input.
+Grand Unified Theories (GUTs) by extrapolating the measured couplings at low scales to the unification scale or the generation
+of supersymmetric (SUSY) spectra from high-scale input.
 
 Usually, Eq.~(\ref{eq::beta}) is solved numerically and over the years many public programs appeared which implement
 anomalous dimensions and beta functions of various models. Most of them implement more features than the scope of \texttt{RGE++}, but are rather specific to a certain model. 
@@ -117,9 +117,9 @@ For pure QCD at the highest perturbative orders available there is \texttt{(C)Ru
 implement running and matching relations in the full Standard Model,
 while REAP \cite{Antusch:2005gp} implements beta functions in the SM, MSSM and 2HDMs including right-handed neutrinos. For supersymmetric theories there is a plethora of spectrum generators,
 which all implement various models, such as \texttt{SOFTSUSY} \cite{Allanach:2001kg}, \texttt{SuSpect} \cite{Djouadi:2002ze}, \texttt{SPheno} \cite{Porod:2003um,Porod:2011nf},
-Flexible SUSY \cite{Athron:2014yba,Athron:2017fvs}. Furthermore, there are programs implementing the general two-loop beta functions
+\texttt{Flexible SUSY} \cite{Athron:2014yba,Athron:2017fvs}. Furthermore, there are programs implementing the general two-loop beta functions
 \cite{Machacek:1983tz,Machacek:1983fi,Machacek:1984zw,Jack:1982hf,Jack:1982sr,Jack:1984vj} and anomalous dimensions of the dimensionful couplings \cite{Luo:2002ti,Sartore:2020pkk}, such
-as \texttt{SARAH} \cite{Staub:2013tta}, PyR@TE \cite{Lyonnet:2016xiz,Sartore:2020gou} and ARGES \cite{Litim:2020jvl}\footnote{PyR@TE and ARGES also implement the results for three-loop gauge coupling beta functions \cite{Poole:2019kcm}}.
+as \texttt{SARAH} \cite{Staub:2013tta}, \texttt{PyR@TE} \cite{Lyonnet:2016xiz,Sartore:2020gou} and \texttt{ARGES} \cite{Litim:2020jvl}\footnote{\texttt{PyR@TE} and \texttt{ARGES} also implement the results for three-loop gauge coupling beta functions \cite{Poole:2019kcm}}.
 
 The goal of \texttt{RGE++} is much simpler: to provide an easy to use, template-based \texttt{C++} class library, capable of numerically solving rather generic
 RGEs, which can be used from within other programs. Furthermore, we want to provide various higher-order results, since many of
@@ -262,9 +262,9 @@ In analogy to \texttt{base}, it has the following model parameters as \texttt{pu
 \begin{lstlisting}
   gauge<n> g;         // vector of gauge couplings
   self<m> La;         // Higgs self-coupling(s)
-  yukawa Yu,Yd,Ye,Yn; // yukawa matrices
+  yukawa Yu,Yd,Ye,Yn; // Yukawa matrices
   yukawa Ka,Mn;       // Wilson coefficient of the Weinberg operator,
-                      // Neutrino mass matrix   
+                      // neutrino mass matrix   
 \end{lstlisting}
 The loop order for the beta functions is set via the \texttt{protected} member
 \begin{lstlisting}
@@ -465,11 +465,11 @@ Access to the results is given by the member functions
   yukawa get_CKM(); // returns the CKM matrix
   Vector3d get_upyukawas(); // returns the central values y_u, y_c, y_t
   Vector3d get_downyukawas(); // returns the central values y_d, y_s, y_b
-  Vector4d get_CKMparameters(); // return theta_12, theta_13, theta_23, deltaCP
+  Vector4d get_CKMparameters(); // return theta_12, theta_13, theta_23, delta_CP
   Vector3d get_upmasses(); // returns m_u, m_c, m_t
   Vector3d get_downmasses(); // returns m_d, m_s, m_b
-  Vector3d get_upmasses(const double tanb); // return m_u, m_c, m_t using tanbeta
-  Vector3d get_downmasses(const double tanb); // returns m_d, m_s, m_b using tanbeta
+  Vector3d get_upmasses(const double tanb); // return m_u, m_c, m_t using tan(beta)
+  Vector3d get_downmasses(const double tanb); // returns m_d, m_s, m_b using tan(beta)
 \end{lstlisting}
 The convention for the CKM matrix is chosen such that
 \begin{equation}
@@ -500,9 +500,9 @@ Access to the results is given by the member functions
   yukawa get_PMNS(); // returns the PMNS matrix
   Vector3d get_elyukawas(); // returns the central values y_e, y_mu, y_tau
   Vector3d get_numasses(); // returns the light neutrino masses
-  Vector4d get_PMNSparameters(); // returns theta_12, theta_13, theta_23, deltaCP
+  Vector4d get_PMNSparameters(); // returns theta_12, theta_13, theta_23, delta_CP
   Vector3d get_elmasses(); // returns m_e, m_mu, m_tau
-  Vector3d get_elmasses(const double tanb); // returns m_e, m_mu, m_tau using tanbeta
+  Vector3d get_elmasses(const double tanb); // returns m_e, m_mu, m_tau using tan(beta)
   double get_betadecaymass(); // returns the effective beta decay mass for neutrinos
 \end{lstlisting}
 The convention for the PMNS matrix is chosen such that
@@ -533,7 +533,7 @@ To build the example call \texttt{make sm\_example} from the main folder. Then, 
   ./examples/sm_example
 \end{lstlisting}
 Since we have not given any additional options to the program the output should look like
-\begin{lstlisting}
+\begin{lstlisting}[keywordstyle=\color{blue}]
   SM parameters at 3000 GeV and 2 loops:
   gauge couplings: 0.47077 0.63383  1.0008
   up-type yukawas: 6.3691e-06   0.002976    0.83158
@@ -567,7 +567,7 @@ The model parameters are \texttt{eigen3} matrix types. The down-type Yukawa matr
 The non-zero numbers are the down-, strange- and bottom-quark Yukawa couplings in the basis where the down-type Yukawa matrix is diagonal.
 For details on how to define and manipulate  \texttt{eigen3} matrix types see the \texttt{eigen3} manual. In a flavour basis where $Y_u$ is diagonal, $Y_d$ takes the form
 \begin{equation}
-    Y_d = \operatorname{diag}(y_d,y_s,y_b)\, V_{\mathrm{CKM}}^\dagger\;.
+    Y_d = \operatorname{diag}(y_d,y_s,y_b) \cdot V_{\mathrm{CKM}}^\dagger\;.
 \end{equation}
 This rotation is performed by the line
 \begin{lstlisting}
@@ -623,11 +623,11 @@ It is implemented as
   struct write_out{
     void operator()(const sm &x, double t ){
 
-      // calculate quark Yukawas
+      // calculate quark yukawas
       ckm quarks(x.Yu, x.Yd);
       quarks.calculate();
 
-      // calculate lepton Yukawas
+      // calculate lepton yukawas
       yukawa zero;
       pmns leptons(zero, x.Ye);
       leptons.calculate();
@@ -724,7 +724,7 @@ The results can be written to the standard output similar to
   std::cout << "up-type masses (GeV): " << quarks.get_upmasses(tanb).transpose() << std::endl;
 \end{lstlisting}    
 The complete output should then look like
-\begin{lstlisting}
+\begin{lstlisting}[keywordstyle=\color{blue}]
   nuMSSM parameters at MZ:
   gauge couplings: 0.45494 0.63045  1.1092
   ckm parameters:  0.95698 0.058163 0.030761   3.1416
