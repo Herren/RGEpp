@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[preprint,12pt]{elsarticle}
 \pdfoutput=1
 \usepackage{a4wide}
 \usepackage{amsfonts}
@@ -16,10 +16,10 @@
 \usepackage{verbatim}
 \usepackage{dsfont}
 \usepackage{bbm}
-\usepackage[backend=bibtex8,sorting=none,natbib=true,maxbibnames=10,style=numeric-comp,block=ragged]{biblatex}
+%\usepackage[backend=bibtex8,sorting=none,natbib=false,maxbibnames=10,style=numeric-comp,block=ragged]{biblatex}
 \usepackage{hyperref}
 \usepackage{listings}
-\bibliography{literature}
+
 
 \lstdefinestyle{cpp}{
   belowcaptionskip=1\baselineskip,
@@ -51,35 +51,35 @@
   pdfproducer={LaTeX with hyperref}
 }
 
+\newcounter{bla}
+\newenvironment{refnummer}{%
+\list{[\arabic{bla}]}%
+{\usecounter{bla}%
+ \setlength{\itemindent}{0pt}%
+ \setlength{\topsep}{0pt}%
+ \setlength{\itemsep}{0pt}%
+ \setlength{\labelsep}{2pt}%
+ \setlength{\listparindent}{0pt}%
+ \settowidth{\labelwidth}{[9]}%
+ \setlength{\leftmargin}{\labelwidth}%
+ \addtolength{\leftmargin}{\labelsep}%
+ \setlength{\rightmargin}{0pt}}}
+ {\endlist}
+
+\journal{Computer Physics Communications}
+
 \begin{document}
 \lstset{style=cpp}
 
-\begin{titlepage}
+\begin{frontmatter}
+\title{\texttt{RGE++}\\ A \texttt{C++} library to solve renormalisation group equations in quantum field theory}
 
-\vspace*{-15mm}
-\begin{flushright}
-TTP19-025\\
-P3H-20-085
-\end{flushright}
-\vspace*{0.7cm}
+\author[a]{Thomas Deppisch}
+\author[b]{Florian Herren\corref{author}}
 
-
-\begin{center}
-{ \bf\LARGE \texttt{RGE++}\\ A \texttt{C++} library to solve renormalisation group equations in quantum field theory}
-\\[8mm]
-Thomas Deppisch$^{\, a}$ \footnote{E-mail: \texttt{thomas.deppisch@dwd.de}} ,
-Florian Herren$^{\, b}$ \footnote{Corresponding Author, E-mail: \texttt{florian.herren@kit.edu}}
-\\[1mm]
-\end{center}
-\vspace*{0.50cm}
-\centerline{$^{a}$ \it German Weather Service (DWD)}
-\centerline{\it Research and Development --- Data Assimilation}
-\centerline{\it Frankfurter Stra\ss{}e 135, D-73067 Offenbach am Main, Germany}
-\vspace*{0.2cm}
-\centerline{$^{b}$ \it Institut f\"ur Theoretische Teilchenphysik}
-\centerline{\it Karlsruhe Institute of Technology (KIT)}
-\centerline{\it Wolfgang-Gaede-Stra\ss{}e 1, D-76128 Karlsruhe, Germany}
-\vspace*{0.2cm}
+\cortext[author] {Corresponding author.\\\textit{E-mail address:} fherren@fnal.gov}
+\address[a]{German Weather Service (DWD)\\ Research and Development --- Data Assimilation\\ Frankfurter Stra\ss{}e 135, D-73067 Offenbach am Main, Germany}
+\address[b]{Institut f\"ur Theoretische Teilchenphysik\\ Karlsruhe Institute of Technology (KIT)\\ Wolfgang-Gaede-Stra\ss{}e 1, D-76128 Karlsruhe, Germany}
 
 \begin{abstract}
 In recent years three-, four- and five-loop beta functions have been computed for various phenomenologically interesting models.
@@ -89,7 +89,41 @@ Furthermore, we implement the available beta functions for the Standard Model, t
 extension of the Standard Model and two-Higgs-doublet models, as well as right-handed neutrino extensions of the former two.
 \end{abstract}
 
-\end{titlepage}
+\end{frontmatter}
+\newpage
+{\bf PROGRAM SUMMARY}
+  %Delete as appropriate.
+
+\begin{small}
+\noindent
+{\em Program Title:} \texttt{RGE++}                                       \\
+{\em CPC Library link to program files:} (to be added by Technical Editor) \\
+{\em Developer's repository link:} \href{www.github.com/Herren/RGEpp}{www.github.com/Herren/RGEpp} \\
+{\em Code Ocean capsule:} (to be added by Technical Editor)\\
+{\em Licensing provisions:} MIT  \\
+{\em Programming language:} \texttt{C++}                           \\
+{\em Nature of problem:}\\
+Values of coupling constants in dimensionally regularized quantum field theories depend on the chosen renormalization scale $\mu$.
+The change of coupling constants w.r.t a change of $\mu$ is encoded in coupled first-order differential equations. \texttt{RGE++} provides
+routines for solving these differential equations in the Standard Model and selected models beyond it. Furthermore,
+it provides templates for the implementation of additional models.\\
+{\em Solution method:}\\
+\texttt{RGE++} is implemented as a set of \texttt{C++} template classes. To numerically solve the differential equations, we employ \texttt{Eigen3} [1] and \texttt{odeint} [2].
+Furthermore, various additional \texttt{C++} routines are implemented to extract physical quantities from Yukawa matrices.\\
+{\em Additional comments including restrictions and unusual features:}\\
+For non-physical choices of the coupling constants Landau poles might occur.
+
+
+\begin{thebibliography}{0}
+\bibitem{1}
+G.~Guennebaud, B.~Jacob, et~al., \href{http://eigen.tuxfamily.org}{Eigen v3} (2010).
+\bibitem{2}
+K.~Ahnert, M.~Mulansky, Odeint - solving ordinary differential equations in
+  c++, AIP Conference Proceedings 1389 (2011) 001.
+\end{thebibliography}
+\end{small}
+
+\newpage
 
 \setcounter{footnote}{0}
 
@@ -652,7 +686,7 @@ is due to an accidental cancellation in the three-loop terms \cite{Davies:2019on
 on the renormalisation scale is shown.
 \begin{figure}
 \centering
-\includegraphics{delta_running.eps}
+\includegraphics{delta_running.pdf}
 \caption{\label{plt::delta} $\Delta$ plotted over the renormalisation scale. For energies above $10^4$~TeV, the three-loop terms have a bigger impact than the four-loop ones. Still,
 the four-loop contributions are at least half the size of the three-loop ones for the renormalisation scales under consideration.}
 \end{figure}
@@ -804,8 +838,8 @@ We thank Joshua Davies, Marvin Gerlach and Matthias Linster for testing the code
 TD would like to thank Martin Spinrath and Stefan Schacht for collaboration on the project initiating the development of \texttt{RGE++}.
 This research was supported by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under grant 396021762 - TRR 257 "Particle Physics Phenomenology after the Higgs Discovery".
 FH acknowledges the support by the Doctoral School "Karlsruhe School of Elementary and Astroparticle Physics: Science and Technology".
-
-\printbibliography
+\bibliographystyle{elsarticle-num}
+\bibliography{literature}
 \end{document}
 
 %%% Local Variables:
