@@ -29,7 +29,9 @@ public:
        : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(false) {};
  nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
        : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2), weylordering(false) {};
-  // constructor that sets all selfcouplings to zero
+  // constructors that sets all selfcouplings to zero
+ nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in, const bool weylordering_in)
+       : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(weylordering_in)  {};
  nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in)
        : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(false)  {};
  nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
