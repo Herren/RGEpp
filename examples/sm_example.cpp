@@ -25,8 +25,11 @@ int main(int argc, char* argv[]){
   // read the final renormalisation scale from comand line and set the default to 3 TeV
   double scale = (argc >= 2) ? atof(argv[1]) : 3000.;
 
-  // read the number of loops for the bera function and set default to 2
-  int nloops = (argc >= 3) ? atoi(argv[2]) : 2;  
+  // read the number of loops for the beta function and set default to 2
+  int nloops = (argc >= 3) ? atoi(argv[2]) : 2;
+  
+  // read flag for L-(L-1)-(L-2) ordering and set default to false
+  bool weylordering = (argc >= 4) ? atoi(argv[3]) : false;
 
   // define variables
   double MZ(91.1876);                      // EW scale
@@ -49,7 +52,7 @@ int main(int argc, char* argv[]){
   Yd = Yd*ckm(th12,th13,th23,phi).adjoint();
 
   // add data to the RGE class
-  sm values(g,lambda,Yu,Yd,Ye,nloops);
+  sm values(g,lambda,Yu,Yd,Ye,nloops,weylordering);
   
   // perform RGEs from M_Z to scale
   using namespace boost::numeric::odeint;
