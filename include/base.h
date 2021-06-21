@@ -10,6 +10,9 @@ using namespace Eigen;
 template<int n, int m> class base {
 protected:
   int nloops;
+  
+  // use L-(L-1)-(L-2) loop running instead of L-L-L loop running
+  bool weylordering;
 
 public:
   // members
@@ -18,12 +21,13 @@ public:
   yukawa Yu,Yd,Ye;   // Yukawa matrices
   
   // constructors
- base() : g(), La(), Yu(), Yd(), Ye(), nloops(2) {};
- base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in) {};
- base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2) {};
+ base() : g(), La(), Yu(), Yd(), Ye(), nloops(2), weylordering(false) {};
+ base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in, const bool weylordering_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(weylordering_in) {};
+ base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(false) {};
+ base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2), weylordering(false) {};
   // constructor that sets all selfcouplings to zero
- base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in) {};
- base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2) {};
+ base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(false) {};
+ base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2), weylordering(false) {};
  
   // in-place operations for vector space algebra
   base operator+=(const base<n,m> &X);
@@ -34,9 +38,15 @@ public:
 
   // set the number of loops (default: 2)
   void setNloops(const int nloops_in);
+  
+  // enable Weyl ordering (default: false)
+  void setWeylordering(const bool weylordering_in);
 
   // get the number of loops
   unsigned int getNloops() const;
+
+  // check if Weyl ordering is enabled
+  bool getWeylordering() const;
   
   // check for Landau poles and Nan
   bool check();
@@ -68,9 +78,19 @@ template<int n, int m> void base<n,m>::setNloops(const int nloops_in) {
   nloops = nloops_in;
 }
 
-//return number of loops
+// enable Weyl ordering
+template<int n, int m> void base<n,m>::setWeylordering(const bool weylordering_in) {
+  weylordering = weylordering_in;
+}
+
+// return number of loops
 template<int n, int m> unsigned int base<n,m>::getNloops() const {
   return nloops;
+}
+
+// return if Weyl ordering is enabled
+template<int n, int m> bool base<n,m>::getWeylordering() const {
+  return weylordering;
 }
 
 
@@ -88,23 +108,23 @@ template<int n, int m> bool base<n,m>::check() {
 // operations for vector space algebra
 
 template<int n, int m> base<n,m> operator+(const base<n,m> &lhs, const base<n,m> &rhs) {
-  return base<n,m>(lhs.g+rhs.g, lhs.La+rhs.La, lhs.Yu+rhs.Yu, lhs.Yd+rhs.Yd, lhs.Ye+rhs.Ye, lhs.getNloops());
+  return base<n,m>(lhs.g+rhs.g, lhs.La+rhs.La, lhs.Yu+rhs.Yu, lhs.Yd+rhs.Yd, lhs.Ye+rhs.Ye, lhs.getNloops(), lhs.getWeylordering());
 }
 
 template<int n, int m> base<n,m> operator*(const base<n,m> &lhs, const double &a) {
-  return base<n,m>(lhs.g*a, lhs.La*a, lhs.Yu*a, lhs.Yd*a, lhs.Ye*a, lhs.getNloops());
+  return base<n,m>(lhs.g*a, lhs.La*a, lhs.Yu*a, lhs.Yd*a, lhs.Ye*a, lhs.getNloops(), lhs.getWeylordering());
 }
 
 template<int n, int m> base<n,m> operator*(const double &a, const base<n,m> &rhs) {
-  return base<n,m>(a*rhs.g, a*rhs.La, a*rhs.Yu, a*rhs.Yd, a*rhs.Ye, rhs.getNloops());
+  return base<n,m>(a*rhs.g, a*rhs.La, a*rhs.Yu, a*rhs.Yd, a*rhs.Ye, rhs.getNloops(), rhs.getWeylordering());
 }
 
 template<int n, int m> base<n,m> operator+(const base<n,m> &lhs, const double &a) {
-  return base<n,m>(lhs.g+a, lhs.La+a, lhs.Yu+a, lhs.Yd+a, lhs.Ye+a, lhs.getNloops());
+  return base<n,m>(lhs.g+a, lhs.La+a, lhs.Yu+a, lhs.Yd+a, lhs.Ye+a, lhs.getNloops(), lhs.getWeylordering());
 }
 
 template<int n, int m> base<n,m> operator+(const double &a , const base<n,m> &rhs) {
-  return base<n,m>(a+rhs.g, a+rhs.La, a+rhs.Yu, a+rhs.Yd, a+rhs.Ye, rhs.getNloops());
+  return base<n,m>(a+rhs.g, a+rhs.La, a+rhs.Yu, a+rhs.Yd, a+rhs.Ye, rhs.getNloops(), rhs.getWeylordering());
 }
 
 template<int n, int m> base<n,m> operator/(const base<n,m> &lhs, const base<n,m> &rhs) {
@@ -113,11 +133,12 @@ template<int n, int m> base<n,m> operator/(const base<n,m> &lhs, const base<n,m>
 	           lhs.Yu.cwiseQuotient(rhs.Yu),
 	           lhs.Yd.cwiseQuotient(rhs.Yd),
 	           lhs.Ye.cwiseQuotient(rhs.Ye),
-                   lhs.getNloops());
+                   lhs.getNloops(),
+                   lhs.getWeylordering());
 }
 
 template<int n, int m> base<n,m> abs(const base<n,m> &x){
-  return base<n,m>(abs(x.g), abs(x.La), abs(x.Yu), abs(x.Yd), abs(x.Ye), x.getNloops());
+  return base<n,m>(abs(x.g), abs(x.La), abs(x.Yu), abs(x.Yd), abs(x.Ye), x.getNloops(), x.getWeylordering());
 }
 
 // specialisation of vector_space_algebra for Eigen::Matrix

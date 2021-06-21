@@ -10,6 +10,9 @@ using namespace Eigen;
 template<int n, int m> class nubase {
 protected:
   unsigned int nloops;
+  
+  // use L-(L-1)-(L-2) loop running instead of L-L-L loop running
+  bool weylordering;
 
 public:
   // members
@@ -19,16 +22,18 @@ public:
   yukawa Ka,Mn;       // Wilson coefficient of the Weinberg operator, neutrino mass matrix       
   
   // constructors
- nubase() : g(), La(), Yu(), Yd(), Ye(), Yn(), Ka(), Mn(), nloops(2) {};
+ nubase() : g(), La(), Yu(), Yd(), Ye(), Yn(), Ka(), Mn(), nloops(2), weylordering(false) {};
+ nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in, const bool weylordering_in)
+       : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(weylordering_in) {};
  nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in)
-       : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in) {};
+       : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(false) {};
  nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
-       : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2) {};
+       : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2), weylordering(false) {};
   // constructor that sets all selfcouplings to zero
  nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in)
-       : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in)  {};
+       : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(false)  {};
  nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
-       : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2)  {};
+       : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2), weylordering(false)  {};
  
   // in-place operations for vector space algebra
   nubase operator+=(const nubase<n,m> &X);
@@ -39,9 +44,15 @@ public:
 
   // set the number of loops (default: 2)
   void setNloops(const unsigned int nloops_in);
+  
+  // enable Weyl ordering (default: false)
+  void setWeylordering(const bool weylordering_in);
 
   // get the number of loops
   unsigned int getNloops() const;
+  
+  // check if Weyl ordering is enabled
+  bool getWeylordering() const;
   
   // check for Landau poles and Nan
   bool check();
@@ -85,8 +96,19 @@ template<int n, int m> void nubase<n,m>::setNloops(const unsigned int nloops_in)
   nloops = nloops_in;
 }
 
+// enable Weyl ordering
+template<int n, int m> void nubase<n,m>::setWeylordering(const bool weylordering_in) {
+  weylordering = weylordering_in;
+}
+
+// return number of loops
 template<int n, int m> unsigned int nubase<n,m>::getNloops() const {
   return nloops;
+}
+
+// return if Weyl ordering is enabled
+template<int n, int m> bool nubase<n,m>::getWeylordering() const {
+  return weylordering;
 }
 
 // check for Landau poles and Nan
@@ -144,23 +166,23 @@ template<int n, int m> void nubase<n,m>::integrate_out(int gen) {
 
 // operations for vector space algebra
 template<int n, int m> nubase<n,m> operator+(const nubase<n,m> &lhs, const nubase<n,m> &rhs) {
-  return nubase<n,m>(lhs.g+rhs.g, lhs.La+rhs.La, lhs.Yu+rhs.Yu, lhs.Yd+rhs.Yd, lhs.Ye+rhs.Ye, lhs.Yn+rhs.Yn, lhs.Ka+rhs.Ka, lhs.Mn+rhs.Mn, lhs.getNloops());
+  return nubase<n,m>(lhs.g+rhs.g, lhs.La+rhs.La, lhs.Yu+rhs.Yu, lhs.Yd+rhs.Yd, lhs.Ye+rhs.Ye, lhs.Yn+rhs.Yn, lhs.Ka+rhs.Ka, lhs.Mn+rhs.Mn, lhs.getNloops(), lhs.getWeylordering());
 }
 
 template<int n, int m> nubase<n,m> operator*(const nubase<n,m> &lhs, const double &a) {
-  return nubase<n,m>(lhs.g*a, lhs.La*a, lhs.Yu*a, lhs.Yd*a, lhs.Ye*a, lhs.Yn*a , lhs.Ka*a , lhs.Mn*a, lhs.getNloops());
+  return nubase<n,m>(lhs.g*a, lhs.La*a, lhs.Yu*a, lhs.Yd*a, lhs.Ye*a, lhs.Yn*a , lhs.Ka*a , lhs.Mn*a, lhs.getNloops(), lhs.getWeylordering());
 }
 
 template<int n, int m> nubase<n,m> operator*(const double &a, const nubase<n,m> &rhs){
-  return nubase<n,m>(a*rhs.g, a*rhs.La, a*rhs.Yu, a*rhs.Yd, a*rhs.Ye, a*rhs.Yn, a*rhs.Ka, a*rhs.Mn, rhs.getNloops());
+  return nubase<n,m>(a*rhs.g, a*rhs.La, a*rhs.Yu, a*rhs.Yd, a*rhs.Ye, a*rhs.Yn, a*rhs.Ka, a*rhs.Mn, rhs.getNloops(), rhs.getWeylordering());
 }
 
 template<int n, int m> nubase<n,m> operator+(const nubase<n,m> &lhs, const double &a) {
-  return nubase<n,m>( lhs.g+a, lhs.La+a, lhs.Yu+a, lhs.Yd+a, lhs.Ye+a, lhs.Yn+a, lhs.Ka+a, lhs.Mn+a, lhs.getNloops());
+  return nubase<n,m>( lhs.g+a, lhs.La+a, lhs.Yu+a, lhs.Yd+a, lhs.Ye+a, lhs.Yn+a, lhs.Ka+a, lhs.Mn+a, lhs.getNloops(), lhs.getWeylordering());
 }
 
 template<int n, int m> nubase<n,m> operator+(const double &a, const nubase<n,m> &rhs) {
-  return nubase<n,m>(a+rhs.g, a+rhs.La, a+rhs.Yu, a+rhs.Yd, a+rhs.Ye, a+rhs.Yn, a+rhs.Ka, a+rhs.Mn, rhs.getNloops());
+  return nubase<n,m>(a+rhs.g, a+rhs.La, a+rhs.Yu, a+rhs.Yd, a+rhs.Ye, a+rhs.Yn, a+rhs.Ka, a+rhs.Mn, rhs.getNloops(), rhs.getWeylordering());
 }
 
 template<int n, int m> nubase<n,m> operator/(const nubase<n,m> &lhs, const nubase<n,m> &rhs) {
@@ -172,11 +194,12 @@ template<int n, int m> nubase<n,m> operator/(const nubase<n,m> &lhs, const nubas
 		     lhs.Yn.cwiseQuotient(rhs.Yn),
 		     lhs.Ka.cwiseQuotient(rhs.Ka),
 		     lhs.Mn.cwiseQuotient(rhs.Mn),
-		     lhs.getNloops());
+		     lhs.getNloops(),
+		     lhs.getWeylordering());
 }
 
 template<int n, int m> nubase<n,m> abs(const nubase<n,m> &x) {
-  return nubase<n,m>(abs(x.g), abs(x.La), abs(x.Yu), abs(x.Yd), abs(x.Ye), abs(x.Yn), abs(x.Ka), abs(x.Mn), x.getNloops() );
+  return nubase<n,m>(abs(x.g), abs(x.La), abs(x.Yu), abs(x.Yd), abs(x.Ye), abs(x.Yn), abs(x.Ka), abs(x.Mn), x.getNloops(), x.getWeylordering());
 }
 
 
