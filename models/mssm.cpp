@@ -21,9 +21,12 @@ void mssm::operator()(const mssm &X, mssm &dX, const double) {
     dX.g[0] = loopfactor*((33./5.)*g3[0]);
     dX.g[1] = loopfactor*(g3[1]);
     dX.g[2] = loopfactor*((-3.)*g3[2]);
+    
+    if(!X.weylordering || (X.weylordering && X.nloops > 1)) {
     dX.Yu = loopfactor*((-13./15.)*g2[0]*X.Yu + (-3.)*g2[1]*X.Yu + (-16./3.)*g2[2]*X.Yu + (3.)*Yu2Tr*X.Yu + (3.)*X.Yu*Yu2 + (1.)*X.Yu*Yd2);
     dX.Yd = loopfactor*((-7./15.)*g2[0]*X.Yd + (-3.)*g2[1]*X.Yd + (-16./3.)*g2[2]*X.Yd + (3.)*Yd2Tr*X.Yd + (1.)*Ye2Tr*X.Yd + (1.)*X.Yd*Yu2 + (3.)*X.Yd*Yd2);
     dX.Ye = loopfactor*((-9./5.)*g2[0]*X.Ye + (-3.)*g2[1]*X.Ye + (1.)*Ye2Tr*X.Ye + (3.)*Yd2Tr*X.Ye + (3.)*X.Ye*Ye2);
+    }
 
     if(nloops > 1) {
       // variables for powers of parameters for nloops >= 2
@@ -38,7 +41,7 @@ void mssm::operator()(const mssm &X, mssm &dX, const double) {
       dX.g[2] += loopfactor2*g3[2]*((11./5.)*g2[0] + (9.)*g2[1] + (14.)*g2[2] + (-4.)*Yu2Tr + (-4.)*Yd2Tr).real();
 
 
-      // small discrepancy w.r.t. old code in Yd?
+      if(!X.weylordering || (X.weylordering && X.nloops > 2)) {
       dX.Yu += loopfactor2*(((-2.)*Ytu4 + (-6.)*Ytu2*Yu2Tr + (-2.)*X.Yu*Yd2*X.Yu.adjoint() + (6.)*g2[1]*Ytu2 + (-2./5.)*g2[0]*Ytu2 + (856./225.)*g4[0] + (128./45.)*g2[0]*g2[2] + (-8./9.)*g4[2])*X.Yu
                          + X.Yu*((-2.)*Yu4 + (-3.)*Yu2*Yu2Tr + (-2.)*Yd4 + (-3.)*Yd2*Yd2Tr + (-1.)*Yd2*Ye2Tr + (4./5.)*g2[0]*Yu2 + (2./5.)*g2[0]*Yd2 + (1./10.)*g2[0]*g2[1] + (8./45.)*g2[0]*g2[2]
                                  + (8.)*g2[1]*g2[2] + (199./900.)*g4[0] + (15./4.)*g4[1] + (-8./9.)*g4[2])
@@ -50,6 +53,8 @@ void mssm::operator()(const mssm &X, mssm &dX, const double) {
       dX.Ye += loopfactor2*(((-2.)*Yte4 + (-6.)*Yte2*Yd2Tr + (-2.)*Yte2*Ye2Tr + (6.)*g2[1]*Yte2 + (-6./5.)*g2[0]*Yte2 + (234./25.)*g4[0])*X.Ye
                          + X.Ye*((-2.)*Ye4 + (-3.)*Ye2*Yd2Tr + (-1.)*Ye2*Ye2Tr + (6./5.)*g2[0]*Ye2 + (9./10.)*g2[0]*g2[1] + (207./100.)*g4[0] + (15./4.)*g4[1])
                          + X.Ye*((-9.)*Yd4Tr + (-3.)*Yu2Yd2Tr + (-3.)*Ye4Tr + (16.)*g2[2]*Yd2Tr + (-2./5.)*g2[0]*Yd2Tr + (6./5.)*g2[0]*Ye2Tr + (9./10.)*g2[0]*g2[1] + (207./100.)*g4[0] + (15./4.)*g4[1]));
+      }
+      
       if(nloops > 2) {
         // variables for powers of parameters for nloops >= 3
         dX.g[0] += loopfactor3*g3[0]*((84./5.)*Yu4Tr + (18.)*Yu2Tr*Yu2Tr + (58./5.)*Yu2Yd2Tr + (54./5.)*Yd4Tr + (36./5.)*Yd2Tr*Yd2Tr + (84./5.)*Ye2Tr*Yd2Tr + (54./5.)*Ye4Tr + (24./5.)*Ye2Tr*Ye2Tr

@@ -31,6 +31,7 @@ void sm::operator()(const sm &X, sm &dX, const double) {
     dX.g[0] = loopfactor*((41./10.)*g3[0]);
     dX.g[1] = loopfactor*((-19./6.)*g3[1]);
     dX.g[2] = loopfactor*((-7.)*g3[2]);
+    
     if(!X.weylordering || (X.weylordering && X.nloops > 1)) {
     dX.Yu = loopfactor*((-3./2.)*X.Yu*Yd2 + (3./2.)*X.Yu*Yu2 + (3.)*X.Yu*Yd2Tr + X.Yu*Ye2Tr + (3.)*X.Yu*Yu2Tr + (-17./20.)*X.Yu*g2[0] + (-9./4.)*X.Yu*g2[1] + (-8.)*X.Yu*g2[2]);
     dX.Yd = loopfactor*((3./2.)*X.Yd*Yd2 + (-3./2.)*X.Yd*Yu2 + (3.)*X.Yd*Yd2Tr + X.Yd*Ye2Tr + (3.)*X.Yd*Yu2Tr + (-1./4.)*X.Yd*g2[0] + (-9./4.)*X.Yd*g2[1] + (-8.)*X.Yd*g2[2]);
