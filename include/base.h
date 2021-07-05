@@ -50,7 +50,7 @@ public:
   bool getWeylordering() const;
   
   // check for Landau poles and Nan
-  bool check();
+  bool check() const;
   
   // macro for eigen member functions
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -96,12 +96,12 @@ template<int n, int m> bool base<n,m>::getWeylordering() const {
 
 
 // check for Landau poles and Nan
-template<int n, int m> bool base<n,m>::check() {
-  return isnotnan(g) && ((&g)->template lpNorm<Infinity>() < 3.5)
-    && isnotnan(La) && ((&La)->template lpNorm<Infinity>() < 3.5)
-    && isnotnan(Yu) && (Yu.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Yd) && (Yd.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Ye) && (Ye.lpNorm<Infinity>() < 3.5)
+template<int n, int m> bool base<n,m>::check() const {
+  return isnotnan(this->g) && ((&g)->template lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->La) && ((&La)->template lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yu) && (Yu.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yd) && (Yd.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Ye) && (Ye.lpNorm<Infinity>() < 3.5)
     && (nloops > 0);
 }
 

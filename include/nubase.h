@@ -57,7 +57,7 @@ public:
   bool getWeylordering() const;
   
   // check for Landau poles and Nan
-  bool check();
+  bool check() const;
 
   // neutrino member functions
 
@@ -114,15 +114,15 @@ template<int n, int m> bool nubase<n,m>::getWeylordering() const {
 }
 
 // check for Landau poles and Nan
-template<int n, int m> bool nubase<n,m>::check() {
-  return isnotnan(g) && ((&g)->template lpNorm<Infinity>() < 3.5)
-    && isnotnan(La) && ((&La)->template lpNorm<Infinity>() < 3.5)
-    && isnotnan(Yu) && (Yu.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Yd) && (Yd.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Ye) && (Ye.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Yn) && (Yn.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Ka) && (Ka.lpNorm<Infinity>() < 3.5)
-    && isnotnan(Mn) && (Mn.lpNorm<Infinity>() < 3.5)
+template<int n, int m> bool nubase<n,m>::check() const {
+  return isnotnan(this->g) && ((&g)->template lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->La) && ((&La)->template lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yu) && (Yu.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yd) && (Yd.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Ye) && (Ye.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yn) && (Yn.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Ka) && (Ka.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Mn) && (Mn.lpNorm<Infinity>() < 3.5)
     && (nloops > 0);
 }
 
