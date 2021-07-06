@@ -15,14 +15,14 @@ void thdmi::operator()(const thdmi &X, thdmi &dX, const double) {
     gauge<3> g2(X.g.array().square().matrix());
     gauge<3> g3(X.g.array().cube().matrix());
     gauge<3> g4(g2.array().square().matrix());
-    yukawa Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
-    yukawa Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
-    yukawa Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
-    yukawa Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
-    yukawa Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
-    yukawa Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
-    yukawa Yu2Yd2 = Yu2*Yd2;          std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
-    yukawa Yd2Yu2 = Yd2*Yu2;
+    yukawa<3,3> Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
+    yukawa<3,3> Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
+    yukawa<3,3> Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
+    yukawa<3,3> Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
+    yukawa<3,3> Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
+    yukawa<3,3> Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
+    yukawa<3,3> Yu2Yd2 = Yu2*Yd2;          std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
+    yukawa<3,3> Yd2Yu2 = Yd2*Yu2;
     self<5> La2(X.La.array().square().matrix());
 
     dX.g[0] = loopfactor*((21./5.)*g3[0]);
@@ -50,11 +50,11 @@ void thdmi::operator()(const thdmi &X, thdmi &dX, const double) {
       gauge<3> g5(g3.cwiseProduct(g2));
       gauge<3> g6(g3.array().square().matrix());
       self<5> La3(La2.cwiseProduct(La));
-      yukawa Yu6 = Yu4*Yu2;             std::complex<double> Yu6Tr = Yu6.trace();
-      yukawa Yd6 = Yd4*Yd2;             std::complex<double> Yd6Tr = Yd6.trace();
-      yukawa Ye6 = Ye4*Ye2;             std::complex<double> Ye6Tr = Ye6.trace();
-      yukawa Yu4Yd2 = Yu4*Yd2;          std::complex<double> Yu4Yd2Tr = Yu4Yd2.trace();
-      yukawa Yu2Yd4 = Yu2*Yd4;          std::complex<double> Yu2Yd4Tr = Yu2Yd4.trace();
+      yukawa<3,3> Yu6 = Yu4*Yu2;             std::complex<double> Yu6Tr = Yu6.trace();
+      yukawa<3,3> Yd6 = Yd4*Yd2;             std::complex<double> Yd6Tr = Yd6.trace();
+      yukawa<3,3> Ye6 = Ye4*Ye2;             std::complex<double> Ye6Tr = Ye6.trace();
+      yukawa<3,3> Yu4Yd2 = Yu4*Yd2;          std::complex<double> Yu4Yd2Tr = Yu4Yd2.trace();
+      yukawa<3,3> Yu2Yd4 = Yu2*Yd4;          std::complex<double> Yu2Yd4Tr = Yu2Yd4.trace();
 
       dX.g[0] += loopfactor2*((-1./2.)*Yd2Tr*g3[0] + (-3./2.)*Ye2Tr*g3[0] + (-17./10.)*Yu2Tr*g3[0] + (18./5.)*g2[1]*g3[0] + (44./5.)*g2[2]*g3[0] + (104./25.)*g5[0]).real();
       dX.g[1] += loopfactor2*((-3./2.)*Yd2Tr*g3[1] + (-1./2.)*Ye2Tr*g3[1] + (-3./2.)*Yu2Tr*g3[1] + (6./5.)*g2[0]*g3[1] + (12.)*g2[2]*g3[1] + (8.)*g5[1]).real();
@@ -143,15 +143,15 @@ void thdmi::operator()(const thdmi &X, thdmi &dX, const double) {
         std::complex<double> Yd4Tr2 = Yd4Tr*Yd4Tr;
         std::complex<double> Ye4Tr2 = Ye4Tr*Ye4Tr;
         std::complex<double> Yu2Yd2Tr2 = Yu2Yd2Tr*Yu2Yd2Tr;
-        yukawa Yd2Yu4 = Yd2*Yu4;                yukawa Yu2Yd2Yu2 = Yu2*Yd2*Yu2;
-        yukawa Yd4Yu2 = Yd4*Yu2;                yukawa Yd2Yu2Yd2 = Yd2*Yu2*Yd2;
-        yukawa Yu8 = Yu6*Yu2;                   std::complex<double> Yu8Tr = Yu8.trace();
-        yukawa Yd8 = Yd6*Yd2;                   std::complex<double> Yd8Tr = Yd8.trace();
-        yukawa Ye8 = Ye6*Ye2;                   std::complex<double> Ye8Tr = Ye8.trace();
-        yukawa Yu4Yd4 = Yu4*Yd4;                std::complex<double> Yu4Yd4Tr = Yu4Yd4.trace();
-        yukawa Yu2Yd6 = Yu2*Yd6;                std::complex<double> Yu2Yd6Tr = Yu2Yd6.trace();
-        yukawa Yu6Yd2 = Yu6*Yd2;                std::complex<double> Yu6Yd2Tr = Yu6Yd2.trace();
-        yukawa Yu2Yd2Yu2Yd2 = Yu2*Yd2*Yu2*Yd2;  std::complex<double> Yu2Yd2Yu2Yd2Tr = Yu2Yd2Yu2Yd2.trace();
+        yukawa<3,3> Yd2Yu4 = Yd2*Yu4;                yukawa<3,3> Yu2Yd2Yu2 = Yu2*Yd2*Yu2;
+        yukawa<3,3> Yd4Yu2 = Yd4*Yu2;                yukawa<3,3> Yd2Yu2Yd2 = Yd2*Yu2*Yd2;
+        yukawa<3,3> Yu8 = Yu6*Yu2;                   std::complex<double> Yu8Tr = Yu8.trace();
+        yukawa<3,3> Yd8 = Yd6*Yd2;                   std::complex<double> Yd8Tr = Yd8.trace();
+        yukawa<3,3> Ye8 = Ye6*Ye2;                   std::complex<double> Ye8Tr = Ye8.trace();
+        yukawa<3,3> Yu4Yd4 = Yu4*Yd4;                std::complex<double> Yu4Yd4Tr = Yu4Yd4.trace();
+        yukawa<3,3> Yu2Yd6 = Yu2*Yd6;                std::complex<double> Yu2Yd6Tr = Yu2Yd6.trace();
+        yukawa<3,3> Yu6Yd2 = Yu6*Yd2;                std::complex<double> Yu6Yd2Tr = Yu6Yd2.trace();
+        yukawa<3,3> Yu2Yd2Yu2Yd2 = Yu2*Yd2*Yu2*Yd2;  std::complex<double> Yu2Yd2Yu2Yd2Tr = Yu2Yd2Yu2Yd2.trace();
 
         dX.g[0] += loopfactor3*((-6./5.)*X.La[2]*X.La[3]*g3[0] + (-9./10.)*std::conj(X.La[4])*X.La[4]*g3[0] + (51./40.)*Yd2Tr2*g3[0] + (183./80.)*Yd4Tr*g3[0] + (157./20.)*Yd2Tr*Ye2Tr*g3[0] + (99./40.)*Ye2Tr2*g3[0]
                               + (261./80.)*Ye4Tr*g3[0] + (177./20.)*Yd2Tr*Yu2Tr*g3[0] + (199./20.)*Ye2Tr*Yu2Tr*g3[0] + (303./40.)*Yu2Tr2*g3[0] + (3./8.)*Yu2Yd2Tr*g3[0] + (339./80.)*Yu4Tr*g3[0]

@@ -6,8 +6,8 @@
 #include "pmns.h"
 
 // ckm matrix in the convention of the PDG
-yukawa ckm(double th12, double th13, double th23, double phi){
-  yukawa res;
+yukawa<3,3> ckm(double th12, double th13, double th23, double phi){
+  yukawa<3,3> res;
   std::complex<double> iphi(0.,phi);
   res << cos(th12)*cos(th13), sin(th12)*cos(th13), sin(th13)*exp(-iphi), // first row
     -sin(th12)*cos(th23)-cos(th12)*sin(th23)*sin(th13)*exp(iphi),        // (2,1) element
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
   double tanb;
   double MZ(91.1876);                      // EW scale
   double scale(3000.);                     // high energy scale
-  yukawa Yu,Yd,Ye,zero;                    // Yukawa matrices
+  yukawa<3,3> Yu,Yd,Ye,zero;                    // Yukawa matrices
   gauge<3> g;                                 // vector for gauge couplings
   std::complex<double> lambda(125.09/174.104/2.0,0.);   // quartic Higgs couplings
 
@@ -51,27 +51,27 @@ int main(int argc, char* argv[]){
 
   // Prepare Yukawa for 2HDM-Type I  
   tanb = 0.9;
-  yukawa Yui = Yu/sin(atan(tanb));
-  yukawa Ydi = Yd/sin(atan(tanb));
-  yukawa Yei = Ye/sin(atan(tanb));
+  yukawa<3,3> Yui = Yu/sin(atan(tanb));
+  yukawa<3,3> Ydi = Yd/sin(atan(tanb));
+  yukawa<3,3> Yei = Ye/sin(atan(tanb));
 
   // Prepare Yukawa for 2HDM-Type II
   tanb = 50.0;
-  yukawa Yuii = Yu/sin(atan(tanb));
-  yukawa Ydii = Yd/cos(atan(tanb));
-  yukawa Yeii = Ye/cos(atan(tanb));
+  yukawa<3,3> Yuii = Yu/sin(atan(tanb));
+  yukawa<3,3> Ydii = Yd/cos(atan(tanb));
+  yukawa<3,3> Yeii = Ye/cos(atan(tanb));
 
   // Prepare Yukawa for 2HDM-Type X  
   tanb = 100.0;
-  yukawa Yux = Yu/sin(atan(tanb));
-  yukawa Ydx = Yd/sin(atan(tanb));
-  yukawa Yex = Ye/cos(atan(tanb));
+  yukawa<3,3> Yux = Yu/sin(atan(tanb));
+  yukawa<3,3> Ydx = Yd/sin(atan(tanb));
+  yukawa<3,3> Yex = Ye/cos(atan(tanb));
 
   // Prepare Yukawa for 2HDM-Type Y
   tanb = 25.0;
-  yukawa Yuy = Yu/sin(atan(tanb));
-  yukawa Ydy = Yd/cos(atan(tanb));
-  yukawa Yey = Ye/sin(atan(tanb));
+  yukawa<3,3> Yuy = Yu/sin(atan(tanb));
+  yukawa<3,3> Ydy = Yd/cos(atan(tanb));
+  yukawa<3,3> Yey = Ye/sin(atan(tanb));
 
   // rotate Yd
   Ydi = Ydi*ckm(th12,th13,th23,phi).adjoint();

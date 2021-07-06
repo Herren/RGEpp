@@ -15,14 +15,14 @@ void nusm::operator() (const nusm & X, nusm & dX, const double) {
     gauge<3> g4(g2.array().square().matrix());
     std::complex<double> La2 = X.La[0]*X.La[0];
 
-    yukawa Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
-    yukawa Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
-    yukawa Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
-    yukawa Yn2 = X.Yn.adjoint()*X.Yn; std::complex<double> Yn2Tr = Yn2.trace();
-    yukawa Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
-    yukawa Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
-    yukawa Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
-    yukawa Yn4 = Yn2*Yn2;             std::complex<double> Yn4Tr = Yn4.trace();
+    yukawa<3,3> Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
+    yukawa<3,3> Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
+    yukawa<3,3> Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
+    yukawa<3,3> Yn2 = X.Yn.adjoint()*X.Yn; std::complex<double> Yn2Tr = Yn2.trace();
+    yukawa<3,3> Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
+    yukawa<3,3> Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
+    yukawa<3,3> Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
+    yukawa<3,3> Yn4 = Yn2*Yn2;             std::complex<double> Yn4Tr = Yn4.trace();
 
     dX.g[0] = ((41./10.)*(g3[0]*loopfactor));
     dX.g[1] = ((-19./6.)*(g3[1]*loopfactor));

@@ -7,9 +7,9 @@ class sm : public base<3,1> {
   
  public:
  sm() : base<3,1>() {};
- sm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in, const bool weylordering_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) { La[0] = La_in; };
- sm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in, nloops_in) { La[0] = La_in; };
- sm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in) { La[0] = La_in; };
+ sm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) { La[0] = La_in; };
+ sm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in, nloops_in) { La[0] = La_in; };
+ sm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : base<3,1>(g_in, Yu_in, Yd_in, Ye_in) { La[0] = La_in; };
  sm(const base<3,1> &X) : base<3,1>(X) {};
  
   // contains the RGEs

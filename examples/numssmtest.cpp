@@ -10,7 +10,7 @@ int main(int, char**){
   using namespace Eigen;
 
   // initiate parameters
-  yukawa Y10,Y126,zero;
+  yukawa<3,3> Y10,Y126,zero;
   gauge<3> g;
   g << 0.718611, 0.71883, 0.719284; // defined at GUTscale
 
@@ -64,7 +64,7 @@ int main(int, char**){
   quarks.calculate();
   
   // extract lepton masses and mixing
-  yukawa ML = values.getML(174.104, tanb);
+  yukawa<3,3> ML = values.getML(174.104, tanb);
 			   
   class pmns leptons(ML, values.Ye);
   leptons.calculate();

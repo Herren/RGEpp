@@ -6,8 +6,8 @@
 #include "pmns.h"
 
 // ckm matrix in the convention of the PDG
-yukawa ckm(double th12, double th13, double th23, double phi){
-  yukawa res;
+yukawa<3,3> ckm(double th12, double th13, double th23, double phi){
+  yukawa<3,3> res;
   std::complex<double> iphi(0.,phi);
   res << cos(th12)*cos(th13), sin(th12)*cos(th13), sin(th13)*exp(-iphi), // first row
     -sin(th12)*cos(th23)-cos(th12)*sin(th23)*sin(th13)*exp(iphi),        // (2,1) element
@@ -24,7 +24,7 @@ int main(int, char**){
 
   // define variables
   double MZ(91.1876);                      // EW scale
-  yukawa Yu,Yd,Ye,zero;                    // Yukawa matrices
+  yukawa<3,3> Yu,Yd,Ye,zero;                    // Yukawa matrices
   gauge<3> g;                              // vector for gauge couplings
 
   // numbers cf. arXiv:1811.02895, Table 3

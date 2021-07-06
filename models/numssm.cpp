@@ -12,10 +12,10 @@ void numssm::operator() (const numssm & X, numssm & dX, const double) {
     // variables for powers of parameters
     gauge<3> g2(X.g.array().square().matrix());
     gauge<3> g3(X.g.array().cube().matrix());
-    yukawa Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
-    yukawa Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
-    yukawa Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
-    yukawa Yn2 = X.Yn.adjoint()*X.Yn; std::complex<double> Yn2Tr = Yn2.trace();
+    yukawa<3,3> Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
+    yukawa<3,3> Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
+    yukawa<3,3> Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
+    yukawa<3,3> Yn2 = X.Yn.adjoint()*X.Yn; std::complex<double> Yn2Tr = Yn2.trace();
 
     dX.g[0] = ((33./5.)*(g3[0]*loopfactor));
     dX.g[1] = (g3[1]*loopfactor);
@@ -32,10 +32,10 @@ void numssm::operator() (const numssm & X, numssm & dX, const double) {
     
     if(X.nloops > 1) {
       gauge<3> g4(g2.array().square().matrix());
-      yukawa Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
-      yukawa Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
-      yukawa Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
-      yukawa Yn4 = Yn2*Yn2;             std::complex<double> Yn4Tr = Yn4.trace();
+      yukawa<3,3> Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
+      yukawa<3,3> Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
+      yukawa<3,3> Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
+      yukawa<3,3> Yn4 = Yn2*Yn2;             std::complex<double> Yn4Tr = Yn4.trace();
     
       dX.g[0] += (g3[0]*(loopfactor2*(((199./25.)*g2[0])+(((27./5.)*g2[1])+(((88./5.)*g2[2])+(((-14./5.)*Yd2Tr)+(((-18./5.)*Ye2Tr)+((-26./5.)*Yu2Tr)))))))).real();
       dX.g[1] += (g3[1]*(loopfactor2*(((9./5.)*g2[0])+((25.*g2[1])+((24.*g2[2])+((-6.*Yd2Tr)+((-2.*Ye2Tr)+(-6.*Yu2Tr)))))))).real();

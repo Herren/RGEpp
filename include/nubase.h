@@ -18,23 +18,23 @@ public:
   // members
   gauge<n> g;         // vector of gauge couplings
   self<m> La;         // Higgs selfcoupling(s)
-  yukawa Yu,Yd,Ye,Yn; // Yukawa matrices
-  yukawa Ka,Mn;       // Wilson coefficient of the Weinberg operator, neutrino mass matrix       
+  yukawa<3,3> Yu,Yd,Ye,Yn; // Yukawa matrices
+  yukawa<3,3> Ka,Mn;       // Wilson coefficient of the Weinberg operator, neutrino mass matrix       
   
   // constructors
  nubase() : g(), La(), Yu(), Yd(), Ye(), Yn(), Ka(), Mn(), nloops(2), weylordering(false) {};
- nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in, const bool weylordering_in)
+ nubase(const gauge<n> g_in, const self<m> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in, const unsigned int nloops_in, const bool weylordering_in)
        : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(weylordering_in) {};
- nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in)
+ nubase(const gauge<n> g_in, const self<m> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in, const unsigned int nloops_in)
        : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(false) {};
- nubase(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
+ nubase(const gauge<n> g_in, const self<m> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in)
        : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2), weylordering(false) {};
   // constructors that sets all selfcouplings to zero
- nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in, const bool weylordering_in)
+ nubase(const gauge<n> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in, const unsigned int nloops_in, const bool weylordering_in)
        : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(weylordering_in)  {};
- nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in, const unsigned int nloops_in)
+ nubase(const gauge<n> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in, const unsigned int nloops_in)
        : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(nloops_in), weylordering(false)  {};
- nubase(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
+ nubase(const gauge<n> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in)
        : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), Yn(Yn_in), Ka(Ka_in), Mn(Mn_in), nloops(2), weylordering(false)  {};
  
   // in-place operations for vector space algebra
@@ -65,8 +65,8 @@ public:
   Eigen::Vector3d logthresholds();
 
   // extract mass matrices in SM and 2HDM
-  yukawa getML(double vev);
-  yukawa getML(double vev, double tanb);
+  yukawa<3,3> getML(double vev);
+  yukawa<3,3> getML(double vev, double tanb);
   
   // integrate out the nth right-handed neutrino
   void integrate_out(int gen);
@@ -130,17 +130,17 @@ template<int n, int m> bool nubase<n,m>::check() const {
 // Auxiliary functions for decoupling
 // extract seesaw scales
 template<int n, int m> Vector3d nubase<n,m>::logthresholds() {
-  SelfAdjointEigenSolver<yukawa> U(Mn.adjoint()*Mn);
+  SelfAdjointEigenSolver<yukawa<3,3> > U(Mn.adjoint()*Mn);
   return U.eigenvalues().array().sqrt().log().matrix();
 }
 
 // get mass matrix for left-handed neutrinos
-template<int n, int m> yukawa nubase<n,m>::getML(double vev) {
+template<int n, int m> yukawa<3,3> nubase<n,m>::getML(double vev) {
   return -0.5e9*vev*vev*(Ka + 2.*Yn.transpose()*Mn.inverse()*Yn);
 }
 
 // get mass matrix for left-handed neutrinos in 2HDM
-template<int n, int m> yukawa nubase<n,m>::getML(double vev, double tanb) {
+template<int n, int m> yukawa<3,3> nubase<n,m>::getML(double vev, double tanb) {
   double vu = sin(atan(tanb))*vev;
   return -0.5e9*vu*vu*(Ka + 2.*Yn.transpose()*Mn.inverse()*Yn);
 }
@@ -149,7 +149,7 @@ template<int n, int m> yukawa nubase<n,m>::getML(double vev, double tanb) {
 template<int n, int m> void nubase<n,m>::integrate_out(int gen) {
   
   // diagonalise Mn
-  SelfAdjointEigenSolver<yukawa> U(Mn.adjoint()*Mn);
+  SelfAdjointEigenSolver<yukawa<3,3> > U(Mn.adjoint()*Mn);
   Mn = U.eigenvectors().transpose()*Mn*U.eigenvectors();
   //  Mn = U.eigenvalues().asDiagonal();
   

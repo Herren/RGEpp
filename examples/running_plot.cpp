@@ -21,7 +21,7 @@ struct write_out{
     quarks.calculate();
 
     // calculate lepton Yukawas
-    yukawa zero;
+    yukawa<3,3> zero;
     pmns leptons(zero, x.Ye);
     leptons.calculate();
     
@@ -37,8 +37,8 @@ struct write_out{
 };
 
 // ckm matrix in the convention of the PDG
-  yukawa ckm(double th12, double th13, double th23, double phi){
-    yukawa res;
+  yukawa<3,3> ckm(double th12, double th13, double th23, double phi){
+    yukawa<3,3> res;
     std::complex<double> iphi(0.,phi);
     res << cos(th12)*cos(th13), sin(th12)*cos(th13), sin(th13)*exp(-iphi), // first row
       -sin(th12)*cos(th23)-cos(th12)*sin(th23)*sin(th13)*exp(iphi),        // (2,1) element
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]){
   // define variables
   double MZ(91.1876);                      // EW scale
   double MGUT(1.e17);                      // GUT scale
-  yukawa Yu,Yd,Ye,zero;                    // Yukawa matrices
+  yukawa<3,3> Yu,Yd,Ye,zero;                    // Yukawa matrices
   gauge<3> g;                                 // vector for gauge couplings
   std::complex<double> lambda(125.09/174.104,0.);   // quartic Higgs coupling
   

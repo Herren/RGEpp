@@ -18,17 +18,17 @@ public:
   // members
   gauge<n> g;        // vector of gauge couplings
   self<m> La;        // Higgs selfcoupling(s)
-  yukawa Yu,Yd,Ye;   // Yukawa matrices
+  yukawa<3, 3> Yu,Yd,Ye;   // Yukawa matrices
   
   // constructors
  base() : g(), La(), Yu(), Yd(), Ye(), nloops(2), weylordering(false) {};
- base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in, const bool weylordering_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(weylordering_in) {};
- base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(false) {};
- base(const gauge<n> g_in, const self<m> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2), weylordering(false) {};
+ base(const gauge<n> g_in, const self<m> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(weylordering_in) {};
+ base(const gauge<n> g_in, const self<m> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(false) {};
+ base(const gauge<n> g_in, const self<m> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : g(g_in), La(La_in), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2), weylordering(false) {};
   // constructors that sets all selfcouplings to zero
- base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in, const bool weylordering_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(weylordering_in) {};
- base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(false) {};
- base(const gauge<n> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2), weylordering(false) {};
+ base(const gauge<n> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(weylordering_in) {};
+ base(const gauge<n> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(nloops_in), weylordering(false) {};
+ base(const gauge<n> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : g(g_in), La(), Yu(Yu_in), Yd(Yd_in), Ye(Ye_in), nloops(2), weylordering(false) {};
  
   // in-place operations for vector space algebra
   base operator+=(const base<n,m> &X);
@@ -99,9 +99,9 @@ template<int n, int m> bool base<n,m>::getWeylordering() const {
 template<int n, int m> bool base<n,m>::check() const {
   return isnotnan(this->g) && ((&g)->template lpNorm<Infinity>() < 3.5)
     && isnotnan(this->La) && ((&La)->template lpNorm<Infinity>() < 3.5)
-    && isnotnan(this->Yu) && (Yu.lpNorm<Infinity>() < 3.5)
-    && isnotnan(this->Yd) && (Yd.lpNorm<Infinity>() < 3.5)
-    && isnotnan(this->Ye) && (Ye.lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yu) && ((&Yu)->template lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Yd) && ((&Yd)->template lpNorm<Infinity>() < 3.5)
+    && isnotnan(this->Ye) && ((&Ye)->template lpNorm<Infinity>() < 3.5)
     && (nloops > 0);
 }
 

@@ -14,9 +14,9 @@ void mssm::operator()(const mssm &X, mssm &dX, const double) {
     // variables for powers of parameters for nloops >= 1
     gauge<3> g2(X.g.array().square().matrix());
     gauge<3> g3(X.g.array().cube().matrix());
-    yukawa Yu2 = X.Yu.adjoint()*X.Yu; yukawa Ytu2 = X.Yu*X.Yu.adjoint(); std::complex<double> Yu2Tr = Yu2.trace();
-    yukawa Yd2 = X.Yd.adjoint()*X.Yd; yukawa Ytd2 = X.Yd*X.Yd.adjoint(); std::complex<double> Yd2Tr = Yd2.trace();
-    yukawa Ye2 = X.Ye.adjoint()*X.Ye; yukawa Yte2 = X.Ye*X.Ye.adjoint(); std::complex<double> Ye2Tr = Ye2.trace();
+    yukawa<3,3> Yu2 = X.Yu.adjoint()*X.Yu; yukawa<3,3> Ytu2 = X.Yu*X.Yu.adjoint(); std::complex<double> Yu2Tr = Yu2.trace();
+    yukawa<3,3> Yd2 = X.Yd.adjoint()*X.Yd; yukawa<3,3> Ytd2 = X.Yd*X.Yd.adjoint(); std::complex<double> Yd2Tr = Yd2.trace();
+    yukawa<3,3> Ye2 = X.Ye.adjoint()*X.Ye; yukawa<3,3> Yte2 = X.Ye*X.Ye.adjoint(); std::complex<double> Ye2Tr = Ye2.trace();
 
     dX.g[0] = loopfactor*((33./5.)*g3[0]);
     dX.g[1] = loopfactor*(g3[1]);
@@ -31,10 +31,10 @@ void mssm::operator()(const mssm &X, mssm &dX, const double) {
     if(nloops > 1) {
       // variables for powers of parameters for nloops >= 2
       gauge<3> g4(g2.array().square().matrix());
-      yukawa Yu4 = Yu2*Yu2; yukawa Ytu4 = Ytu2*Ytu2; std::complex<double> Yu4Tr = Yu4.trace();
-      yukawa Yd4 = Yd2*Yd2; yukawa Ytd4 = Ytd2*Ytd2; std::complex<double> Yd4Tr = Yd4.trace();
-      yukawa Ye4 = Ye2*Ye2; yukawa Yte4 = Yte2*Yte2; std::complex<double> Ye4Tr = Ye4.trace();
-      yukawa Yu2Yd2 = Yu2*Yd2; std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
+      yukawa<3,3> Yu4 = Yu2*Yu2; yukawa<3,3> Ytu4 = Ytu2*Ytu2; std::complex<double> Yu4Tr = Yu4.trace();
+      yukawa<3,3> Yd4 = Yd2*Yd2; yukawa<3,3> Ytd4 = Ytd2*Ytd2; std::complex<double> Yd4Tr = Yd4.trace();
+      yukawa<3,3> Ye4 = Ye2*Ye2; yukawa<3,3> Yte4 = Yte2*Yte2; std::complex<double> Ye4Tr = Ye4.trace();
+      yukawa<3,3> Yu2Yd2 = Yu2*Yd2; std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
 
       dX.g[0] += loopfactor2*g3[0]*((199./25.)*g2[0] + (27./5.)*g2[1] + (88./5.)*g2[2] + (-26./5.)*Yu2Tr + (-14./5.)*Yd2Tr + (-18./5.)*Ye2Tr).real();
       dX.g[1] += loopfactor2*g3[1]*((9./5.)*g2[0] + (25.)*g2[1] + (24.)*g2[2] + (-6.)*Yu2Tr + (-6.)*Yd2Tr + (-2.)*Ye2Tr).real();

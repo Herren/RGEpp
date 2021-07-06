@@ -9,7 +9,7 @@ using namespace Eigen;
 class pmns {
   
  private:
-  yukawa Ye, M, PMNS;             // Yukawa matrices
+  yukawa<3,3> Ye, M, PMNS;             // Yukawa matrices
   Vector3d elyuk, numasses;       // eigenvalues
   Vector4d PMNSparameters;        // mixing parameters
   const double vev;               // convention "for fermion masses"
@@ -24,12 +24,12 @@ class pmns {
     vev(174.104) {}            // convention "for fermion masses"
   
   // constructor with Ye and M as input parameter
- pmns(const yukawa Min, const yukawa Yein) :
+ pmns(const yukawa<3,3> Min, const yukawa<3,3> Yein) :
   Ye(Yein), M(Min),                      // Yukawa matrices as input parameters
     PMNS(), elyuk(), numasses(), PMNSparameters(), vev(174.104) {}
 
   // constructor with Ye, M and vev as input parameter
- pmns(const yukawa Min, const yukawa Yein, const double vevin) :
+ pmns(const yukawa<3,3> Min, const yukawa<3,3> Yein, const double vevin) :
   Ye(Yein), M(Min),                      // Yukawa matrices as input parameters
     PMNS(), elyuk(), numasses(), PMNSparameters(), vev(vevin) {}
   
@@ -42,7 +42,7 @@ class pmns {
   // lepton masses (for one and two Higgs doublet models)
   // the beta-decay mass
   
-  yukawa get_PMNS();
+  yukawa<3,3> get_PMNS();
   Vector3d get_elyukawas();
   Vector4d get_PMNSparameters();
   Vector3d get_numasses();
