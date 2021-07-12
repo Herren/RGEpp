@@ -6,6 +6,7 @@
 *.log
 *.out
 *.bcf
+*.spl
 *.run.xml
 *-blx.bib
 
@@ -24,3 +25,4 @@ running_plot
 nusmtest
 numssmtest
 mssmtest
+landau_example
