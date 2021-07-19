@@ -32,9 +32,16 @@ In addition to that, you also need the Eigen3 and up-to-date ODEint libraries to
     git clone https://gitlab.com/libeigen/eigen.git
 ```
 
-inside **your** local folder named 'rgepp'. This ensures that the include paths in the makefile are correct.
+and install them following the respective instructions. In case you already have installed Eigen3 and/or ODEint on your system `cmake` will locate them.
 
-In case you already have installed Eigen3 and/or ODEint on your system or you want to have them in a different folder, adjust the `EIGENPATH` and `ODEINTPATH` variables in `makefile` correspondingly.
+In the next step you can create a build directory using `cmake`
+
+```
+    cmake -B build
+    cd build
+```
+
+In the build directory you now can build the various examples using `make`.
 
 ## Examples
 

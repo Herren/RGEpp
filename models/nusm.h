@@ -7,7 +7,9 @@ class nusm : public nubase<3,1> {
   
  public:
  nusm() : nubase<3,1>() {};
- nusm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const yukawa Yn_in, const yukawa Ka_in, const yukawa Mn_in)
+ nusm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in, const int nloops_in, const bool weylordering_in)
+     : nubase<3,1>(g_in, Yu_in, Yd_in, Ye_in, Yn_in, Ka_in, Mn_in, nloops_in, weylordering_in) {La[0] = La_in;};
+ nusm(const gauge<3> g_in, const std::complex<double> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const yukawa<3,3> Yn_in, const yukawa<3,3> Ka_in, const yukawa<3,3> Mn_in)
      : nubase<3,1>(g_in, Yu_in, Yd_in, Ye_in, Yn_in, Ka_in, Mn_in) {La[0] = La_in;};
  nusm(const nubase<3,1> &X) : nubase<3,1>(X) {};
 

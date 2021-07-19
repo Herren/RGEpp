@@ -7,8 +7,9 @@ class thdmi : public base<3,5> {
   
  public:
  thdmi() : base<3,5>() {};
- thdmi(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
- thdmi(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
+ thdmi(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) {};
+ thdmi(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
+ thdmi(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
  thdmi(const base<3,5> &X) : base<3,5>(X) {};
  
   // contains the RGEs
@@ -19,8 +20,9 @@ class thdmii : public base<3,5> {
   
  public:
  thdmii() : base<3,5>() {};
- thdmii(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
- thdmii(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
+ thdmii(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) {};
+ thdmii(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
+ thdmii(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
  thdmii(const base<3,5> &X) : base<3,5>(X) {};
  
   // contains the RGEs
@@ -32,8 +34,9 @@ class thdmx : public base<3,5> {
   
  public:
  thdmx() : base<3,5>() {};
- thdmx(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
- thdmx(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
+ thdmx(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) {};
+ thdmx(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
+ thdmx(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
  thdmx(const base<3,5> &X) : base<3,5>(X) {};
  
   // contains the RGEs
@@ -45,8 +48,9 @@ class thdmy : public base<3,5> {
   
  public:
  thdmy() : base<3,5>() {};
- thdmy(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
- thdmy(const gauge<3> g_in, const self<5> La_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
+ thdmy(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) {};
+ thdmy(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in, nloops_in) {};
+ thdmy(const gauge<3> g_in, const self<5> La_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : base<3,5>(g_in, La_in, Yu_in, Yd_in, Ye_in) {};
  thdmy(const base<3,5> &X) : base<3,5>(X) {};
  
   // contains the RGEs

@@ -12,31 +12,36 @@ void numssm::operator() (const numssm & X, numssm & dX, const double) {
     // variables for powers of parameters
     gauge<3> g2(X.g.array().square().matrix());
     gauge<3> g3(X.g.array().cube().matrix());
-    yukawa Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
-    yukawa Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
-    yukawa Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
-    yukawa Yn2 = X.Yn.adjoint()*X.Yn; std::complex<double> Yn2Tr = Yn2.trace();
+    yukawa<3,3> Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
+    yukawa<3,3> Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
+    yukawa<3,3> Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
+    yukawa<3,3> Yn2 = X.Yn.adjoint()*X.Yn; std::complex<double> Yn2Tr = Yn2.trace();
 
     dX.g[0] = ((33./5.)*(g3[0]*loopfactor));
     dX.g[1] = (g3[1]*loopfactor);
     dX.g[2] = (-3.*(g3[2]*loopfactor));
+    
+    if(!X.weylordering || (X.weylordering && X.nloops > 1)) {
     dX.Yu = (loopfactor*((X.Yu*(((-13./15.)*g2[0])+((-3.*g2[1])+(((-16./3.)*g2[2])+(Yn2Tr+(3.*Yu2Tr))))))+X.Yu*(Yd2+(3.*Yu2))));
     dX.Yd = (loopfactor*((X.Yd*(((-7./15.)*g2[0])+((-3.*g2[1])+(((-16./3.)*g2[2])+((3.*Yd2Tr)+Ye2Tr)))))+X.Yd*((3.*Yd2)+Yu2)));
     dX.Ye = (loopfactor*((X.Ye*(((-9./5.)*g2[0])+((-3.*g2[1])+((3.*Yd2Tr)+Ye2Tr))))+X.Ye*((3.*Ye2)+Yn2)));
     dX.Yn = (loopfactor*((X.Yn*(((-3./5.)*g2[0])+((-3.*g2[1])+(Yn2Tr+(3.*Yu2Tr)))))+X.Yn*(Ye2+(3.*Yn2))));
     dX.Ka = (loopfactor*((X.Ka*(((-6./5.)*g2[0])+((-6.*g2[1])+((2.*Yn2Tr)+(6.*Yu2Tr)))))+(X.Ka*(Ye2+Yn2)+(X.Ye.transpose()*X.Ye.conjugate()+X.Yn.transpose()*X.Yn.conjugate())*X.Ka)));
     dX.Mn = (loopfactor*((2.*X.Mn*X.Yn.conjugate()*X.Yn.transpose())+(2.*X.Yn*X.Yn.adjoint()*X.Mn)));
+    }
     
     if(X.nloops > 1) {
       gauge<3> g4(g2.array().square().matrix());
-      yukawa Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
-      yukawa Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
-      yukawa Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
-      yukawa Yn4 = Yn2*Yn2;             std::complex<double> Yn4Tr = Yn4.trace();
+      yukawa<3,3> Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
+      yukawa<3,3> Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
+      yukawa<3,3> Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
+      yukawa<3,3> Yn4 = Yn2*Yn2;             std::complex<double> Yn4Tr = Yn4.trace();
     
       dX.g[0] += (g3[0]*(loopfactor2*(((199./25.)*g2[0])+(((27./5.)*g2[1])+(((88./5.)*g2[2])+(((-14./5.)*Yd2Tr)+(((-18./5.)*Ye2Tr)+((-26./5.)*Yu2Tr)))))))).real();
       dX.g[1] += (g3[1]*(loopfactor2*(((9./5.)*g2[0])+((25.*g2[1])+((24.*g2[2])+((-6.*Yd2Tr)+((-2.*Ye2Tr)+(-6.*Yu2Tr)))))))).real();
       dX.g[2] += (g3[2]*(loopfactor2*(((11./5.)*g2[0])+((9.*g2[1])+((14.*g2[2])+((-4.*Yd2Tr)+(-4.*Yu2Tr))))))).real();
+      
+      if(!X.weylordering || (X.weylordering && X.nloops > 2)) {
       dX.Yu += (loopfactor2*(X.Yu*(((2./5.)*(g2[0]*Yd2))+((-3.*(Yd2*Yd2Tr))+((-2.*Yd4)+((-1.*(Yd2*Ye2Tr))+(((2./5.)*(g2[0]*Yu2))+((6.*(g2[1]*Yu2))+((-3.*(Yn2Tr*Yu2))
                +((-9.*(Yu2*Yu2Tr))+((-4.*Yu4)+(-2.*Yd2*Yu2))))))))))+(X.Yu*(((2743./450.)*g4[0])+((g2[0]*g2[1])+(((15./2.)*g4[1])+(((136./45.)*(g2[0]*g2[2]))
                +((8.*(g2[1]*g2[2]))+(((-16./9.)*g4[2])+((-3.*Yn4Tr)+(((4./5.)*(g2[0]*Yu2Tr))+((16.*(g2[2]*Yu2Tr))+((-9.*Yu4Tr)+((-1.*(Ye2*Yn2).trace())
@@ -60,6 +65,7 @@ void numssm::operator() (const numssm & X, numssm & dX, const double) {
                +((-6.*(Yu2Tr*X.Yn.conjugate()*X.Yn.transpose()))+((-2.*X.Yn.conjugate()*X.Ye.transpose()*X.Ye.conjugate()*X.Yn.transpose())
                +(-2.*X.Yn.conjugate()*X.Yn.transpose()*X.Yn.conjugate()*X.Yn.transpose()))))))+(((6./5.)*(g2[0]*X.Yn*X.Yn.adjoint()))
                +((6.*(g2[1]*X.Yn*X.Yn.adjoint()))+((-2.*(Yn2Tr*X.Yn*X.Yn.adjoint()))+((-6.*(Yu2Tr*X.Yn*X.Yn.adjoint()))+((-2.*X.Yn*Ye2*X.Yn.adjoint())+(-2.*X.Yn*Yn2*X.Yn.adjoint()))))))*X.Mn));
+      }
     }
   } else {
     dX.setZero();

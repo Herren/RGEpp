@@ -14,7 +14,7 @@ int main(int, char**){
   double MZ = 91.1876;
 
   // initiate and set model parameters
-  yukawa zero, Y1, Y2;
+  yukawa<3,3> zero, Y1, Y2;
   gauge<3> g;
 
   Y1 << 1.e-4, 0., 0.,  0., 2.e-2, 0.,  0., 0., 0.4;
@@ -46,7 +46,7 @@ int main(int, char**){
   quarks.calculate();
   
   // extract lepton masses and mixing at MZ
-  yukawa ML = values.getML(174.104, tanb);          // left-handed neutrino mass matrix
+  yukawa<3,3> ML = values.getML(174.104, tanb);          // left-handed neutrino mass matrix
   class pmns leptons(ML, values.Ye);
   leptons.calculate();
   

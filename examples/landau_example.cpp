@@ -14,25 +14,20 @@ double alpha(const double g){
 
 // write sm data to std output
 struct write_out{
+  double& m_landau;
+
+   write_out( double &landau )
+    : m_landau( landau ) { }
+    
   void operator()(const sm &x, double t ){
 
-    // calculate quark Yukawas
-    ckm quarks(x.Yu, x.Yd);
-    quarks.calculate();
+    // check for Landau pole
+    bool pole = !(x.check());
 
-    // calculate lepton Yukawas
-    yukawa<3,3> zero;
-    pmns leptons(zero, x.Ye);
-    leptons.calculate();
-    
     // write to standard output
-    std::cout << std::setprecision(10) << exp(t) << "   "
-	      << alpha(x.g[0]) << "   "
-      	      << alpha(x.g[1]) << "   "
-      	      << alpha(x.g[2]) << "   "
-	      << alpha(quarks.get_upyukawas()[2]) << "   "
-	      << alpha(quarks.get_downyukawas()[2]) << "   "
-	      << alpha(leptons.get_elyukawas()[2]) << std::endl;
+    if(pole && m_landau == 0.0) {
+      m_landau = exp(t);
+    }
   }
 };
 
@@ -56,7 +51,6 @@ int main(int argc, char* argv[]){
   // read the number of loops and set default to 2
   int nloops = (argc >= 2) ? atoi(argv[1]) : 1;
   std::cout << "#number of loops: " << nloops << std::endl;
-  std::cout << "# alpha_1 alpha_2 alpha_3 alpha_t alpha_b alpha_tau " << std::endl;
   
   // define variables
   double MZ(91.1876);                      // EW scale
@@ -69,7 +63,9 @@ int main(int argc, char* argv[]){
   Yu << 7.80222e-6, 0,0,0, 0.00364562, 0,0,0, 0.989661;
   Yd << 0.0000166293, 0,0,0, 0.000310436, 0,0,0, 0.0164568;
   Ye << 2.794745e-6, 0,0,0, 5.899863e-4, 0,0,0, 1.002950e-2;
-  g <<  0.461425, 0.65184, 1.21272;
+  
+  // Use large U(1) coupling
+  g <<  1.0, 0.65184, 1.21272;
   
   double th12(0.227035);                   // ckm angle theta 12
   double th13(0.00371224);                 // ckm angle theta 13
@@ -85,9 +81,9 @@ int main(int argc, char* argv[]){
   // set up stepper
   using namespace boost::numeric::odeint;
   typedef runge_kutta_fehlberg78< sm , double , sm , double , vector_space_algebra > stepper;
-
-  // integrate RGEs from MZ to MGUT, note the observer function in the last argument of integrate_const
-  int steps = integrate_const(stepper(), sm(), values , log(MZ) , log(MGUT), 0.1, write_out() );
-          
+  double landau = 0.0;
+  // integrate RGEs from MZ to MGUT, printing position of U(1) Landau pole
+  int steps = integrate_const(stepper(), sm(), values , log(MZ) , log(MGUT), 0.1, write_out(landau) );
+  std::cout << "Landau pole at: " << landau << " GeV" << std::endl;
   return 0;
 }

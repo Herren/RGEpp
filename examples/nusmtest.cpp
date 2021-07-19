@@ -18,7 +18,7 @@ int main(int, char**){
 
   // initiate parameters
   std::complex<double> lambda(0.,0.);
-  yukawa Y10,Y126,zero;
+  yukawa<3,3> Y10,Y126,zero;
 
   gauge<3> g;
   g <<  0.579086, 0.521435, 0.526626; // gauge couplings at the GUT scale
@@ -87,7 +87,7 @@ int main(int, char**){
   quarks.calculate();
   
   // extract lepton masses and mixing
-  yukawa ML =   -0.5e9*174.104*174.104*values.Ka;
+  yukawa<3,3> ML =   -0.5e9*174.104*174.104*values.Ka;
 			   
   class pmns leptons(ML, values.Ye);
   leptons.calculate();

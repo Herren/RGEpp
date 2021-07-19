@@ -19,37 +19,45 @@ void sm::operator()(const sm &X, sm &dX, const double) {
     gauge<3> g3(X.g.array().cube().matrix());
     gauge<3> g4(g2.array().square().matrix());
     std::complex<double> La2 = X.La[0]*X.La[0];
-    yukawa Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
-    yukawa Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
-    yukawa Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
-    yukawa Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
-    yukawa Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
-    yukawa Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
-    yukawa Yu2Yd2 = Yu2*Yd2;          std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
-    yukawa Yd2Yu2 = Yd2*Yu2;
+    yukawa<3,3> Yu2 = X.Yu.adjoint()*X.Yu; std::complex<double> Yu2Tr = Yu2.trace();
+    yukawa<3,3> Yd2 = X.Yd.adjoint()*X.Yd; std::complex<double> Yd2Tr = Yd2.trace();
+    yukawa<3,3> Ye2 = X.Ye.adjoint()*X.Ye; std::complex<double> Ye2Tr = Ye2.trace();
+    yukawa<3,3> Yu4 = Yu2*Yu2;             std::complex<double> Yu4Tr = Yu4.trace();
+    yukawa<3,3> Yd4 = Yd2*Yd2;             std::complex<double> Yd4Tr = Yd4.trace();
+    yukawa<3,3> Ye4 = Ye2*Ye2;             std::complex<double> Ye4Tr = Ye4.trace();
+    yukawa<3,3> Yu2Yd2 = Yu2*Yd2;          std::complex<double> Yu2Yd2Tr = Yu2Yd2.trace();
+    yukawa<3,3> Yd2Yu2 = Yd2*Yu2;
 
     dX.g[0] = loopfactor*((41./10.)*g3[0]);
     dX.g[1] = loopfactor*((-19./6.)*g3[1]);
     dX.g[2] = loopfactor*((-7.)*g3[2]);
+    
+    if(!X.weylordering || (X.weylordering && X.nloops > 1)) {
     dX.Yu = loopfactor*((-3./2.)*X.Yu*Yd2 + (3./2.)*X.Yu*Yu2 + (3.)*X.Yu*Yd2Tr + X.Yu*Ye2Tr + (3.)*X.Yu*Yu2Tr + (-17./20.)*X.Yu*g2[0] + (-9./4.)*X.Yu*g2[1] + (-8.)*X.Yu*g2[2]);
     dX.Yd = loopfactor*((3./2.)*X.Yd*Yd2 + (-3./2.)*X.Yd*Yu2 + (3.)*X.Yd*Yd2Tr + X.Yd*Ye2Tr + (3.)*X.Yd*Yu2Tr + (-1./4.)*X.Yd*g2[0] + (-9./4.)*X.Yd*g2[1] + (-8.)*X.Yd*g2[2]);
     dX.Ye = loopfactor*((3./2.)*X.Ye*Ye2 + (3.)*X.Ye*Yd2Tr + X.Ye*Ye2Tr + (3.)*X.Ye*Yu2Tr + (-9./4.)*X.Ye*g2[0] + (-9./4.)*X.Ye*g2[1]);
+    }
+    
+    if(!X.weylordering || (X.weylordering && X.nloops > 2)) {
     dX.La[0] = loopfactor*((12.)*X.La[0]*Yd2Tr + (-24.)*Yd4Tr + (4.)*X.La[0]*Ye2Tr + (-8.)*Ye4Tr + (12.)*X.La[0]*Yu2Tr + (-24.)*Yu4Tr + (-9./5.)*X.La[0]*g2[0] + (-9.)*X.La[0]*g2[1]
                          + (9./5.)*g2[0]*g2[1] + (27./50.)*g4[0] + (9./2.)*g4[1] + (6.)*La2);
+    }
 
     if(X.nloops > 1) {
       gauge<3> g5(g3.cwiseProduct(g2));
       gauge<3> g6(g3.array().square().matrix());
       std::complex<double> La3 = X.La[0]*La2;
-      yukawa Yu6 = Yu4*Yu2;             std::complex<double> Yu6Tr = Yu6.trace();
-      yukawa Yd6 = Yd4*Yd2;             std::complex<double> Yd6Tr = Yd6.trace();
-      yukawa Ye6 = Ye4*Ye2;             std::complex<double> Ye6Tr = Ye6.trace();
-      yukawa Yu4Yd2 = Yu4*Yd2;          std::complex<double> Yu4Yd2Tr = Yu4Yd2.trace();
-      yukawa Yu2Yd4 = Yu2*Yd4;          std::complex<double> Yu2Yd4Tr = Yu2Yd4.trace();
+      yukawa<3,3> Yu6 = Yu4*Yu2;             std::complex<double> Yu6Tr = Yu6.trace();
+      yukawa<3,3> Yd6 = Yd4*Yd2;             std::complex<double> Yd6Tr = Yd6.trace();
+      yukawa<3,3> Ye6 = Ye4*Ye2;             std::complex<double> Ye6Tr = Ye6.trace();
+      yukawa<3,3> Yu4Yd2 = Yu4*Yd2;          std::complex<double> Yu4Yd2Tr = Yu4Yd2.trace();
+      yukawa<3,3> Yu2Yd4 = Yu2*Yd4;          std::complex<double> Yu2Yd4Tr = Yu2Yd4.trace();
 
       dX.g[0] += loopfactor2*((-1./2.)*Yd2Tr*g3[0] + (-3./2.)*Ye2Tr*g3[0] + (-17./10.)*Yu2Tr*g3[0] + (27./10.)*g2[1]*g3[0] + (44./5.)*g2[2]*g3[0] + (199./50.)*g5[0]).real();
       dX.g[1] += loopfactor2*((-3./2.)*Yd2Tr*g3[1] + (-1./2.)*Ye2Tr*g3[1] + (-3./2.)*Yu2Tr*g3[1] + (9./10.)*g2[0]*g3[1] + (12.)*g2[2]*g3[1] + (35./6.)*g5[1]).real();
       dX.g[2] += loopfactor2*((-2.)*Yd2Tr*g3[2] + (-2.)*Yu2Tr*g3[2] + (11./10.)*g2[0]*g3[2] + (9./2.)*g2[1]*g3[2] + (-26.)*g5[2]).real();
+      
+      if(!X.weylordering || (X.weylordering && X.nloops > 2)) {
       dX.Yu += loopfactor2*((-1./4.)*X.Yu*Yd2Yu2 + (11./4.)*X.Yu*Yd4 + (-6.)*X.La[0]*X.Yu*Yu2 + (-1.)*X.Yu*Yu2Yd2 + (3./2.)*X.Yu*Yu4 + (15./4.)*X.Yu*Yd2*Yd2Tr + (-27./4.)*X.Yu*Yu2*Yd2Tr
                           + (-27./4.)*X.Yu*Yd4Tr + (5./4.)*X.Yu*Yd2*Ye2Tr + (-9./4.)*X.Yu*Yu2*Ye2Tr + (-9./4.)*X.Yu*Ye4Tr + (15./4.)*X.Yu*Yd2*Yu2Tr + (-27./4.)*X.Yu*Yu2*Yu2Tr + (3./2.)*X.Yu*Yu2Yd2Tr
                           + (-27./4.)*X.Yu*Yu4Tr + (-43./80.)*X.Yu*Yd2*g2[0] + (223./80.)*X.Yu*Yu2*g2[0] + (5./8.)*X.Yu*Yd2Tr*g2[0] + (15./8.)*X.Yu*Ye2Tr*g2[0] + (17./8.)*X.Yu*Yu2Tr*g2[0]
@@ -66,12 +74,16 @@ void sm::operator()(const sm &X, sm &dX, const double) {
                           + (3./2.)*X.Ye*Yu2Yd2Tr + (-27./4.)*X.Ye*Yu4Tr + (387./80.)*X.Ye*Ye2*g2[0] + (5./8.)*X.Ye*Yd2Tr*g2[0] + (15./8.)*X.Ye*Ye2Tr*g2[0] + (17./8.)*X.Ye*Yu2Tr*g2[0]
                           + (135./16.)*X.Ye*Ye2*g2[1] + (45./8.)*X.Ye*Yd2Tr*g2[1] + (15./8.)*X.Ye*Ye2Tr*g2[1] + (45./8.)*X.Ye*Yu2Tr*g2[1] + (27./20.)*X.Ye*g2[0]*g2[1] + (20.)*X.Ye*Yd2Tr*g2[2]
                           + (20.)*X.Ye*Yu2Tr*g2[2] + (1371./200.)*X.Ye*g4[0] + (-23./4.)*X.Ye*g4[1] + (3./2.)*X.Ye*La2);
+      }
+      
+      if(!X.weylordering || (X.weylordering && X.nloops > 3)) {
       dX.La[0] += loopfactor2*((-3.)*X.La[0]*Yd4Tr + (120.)*Yd6Tr + (-1.)*X.La[0]*Ye4Tr + (40.)*Ye6Tr + (-42.)*X.La[0]*Yu2Yd2Tr + (-24.)*Yu2Yd4Tr + (-3.)*X.La[0]*Yu4Tr + (-24.)*Yu4Yd2Tr + (120.)*Yu6Tr
                              + (5./2.)*X.La[0]*Yd2Tr*g2[0] + (16./5.)*Yd4Tr*g2[0] + (15./2.)*X.La[0]*Ye2Tr*g2[0] + (-48./5.)*Ye4Tr*g2[0] + (17./2.)*X.La[0]*Yu2Tr*g2[0] + (-32./5.)*Yu4Tr*g2[0]
                              + (45./2.)*X.La[0]*Yd2Tr*g2[1] + (15./2.)*X.La[0]*Ye2Tr*g2[1] + (45./2.)*X.La[0]*Yu2Tr*g2[1] + (117./20.)*X.La[0]*g2[0]*g2[1] + (54./5.)*Yd2Tr*g2[0]*g2[1] + (66./5.)*Ye2Tr*g2[0]*g2[1]
                              + (126./5.)*Yu2Tr*g2[0]*g2[1] + (80.)*X.La[0]*Yd2Tr*g2[2] + (-128.)*Yd4Tr*g2[2] + (80.)*X.La[0]*Yu2Tr*g2[2] + (-128.)*Yu4Tr*g2[2] + (1887./200.)*X.La[0]*g4[0] + (9./5.)*Yd2Tr*g4[0]
                              + (-9.)*Ye2Tr*g4[0] + (-171./25.)*Yu2Tr*g4[0] + (-1677./100.)*g2[1]*g4[0] + (-73./8.)*X.La[0]*g4[1] + (-9.)*Yd2Tr*g4[1] + (-3.)*Ye2Tr*g4[1] + (-9.)*Yu2Tr*g4[1] + (-289./20.)*g2[0]*g4[1]
                              + (-3411./500.)*g6[0] + (305./4.)*g6[1] + (-36.)*Yd2Tr*La2 + (-12.)*Ye2Tr*La2 + (-36.)*Yu2Tr*La2 + (27./5.)*g2[0]*La2 + (27.)*g2[1]*La2 + (-39./2.)*La3);
+      }
 
       if(X.nloops > 2) {
         gauge<3> g7(g5.cwiseProduct(g2));
@@ -84,15 +96,15 @@ void sm::operator()(const sm &X, sm &dX, const double) {
         std::complex<double> Yd4Tr2 = Yd4Tr*Yd4Tr;
         std::complex<double> Ye4Tr2 = Ye4Tr*Ye4Tr;
         std::complex<double> Yu2Yd2Tr2 = Yu2Yd2Tr*Yu2Yd2Tr;
-        yukawa Yd2Yu4 = Yd2*Yu4;                yukawa Yu2Yd2Yu2 = Yu2*Yd2*Yu2;
-        yukawa Yd4Yu2 = Yd4*Yu2;                yukawa Yd2Yu2Yd2 = Yd2*Yu2*Yd2;
-        yukawa Yu8 = Yu6*Yu2;                   std::complex<double> Yu8Tr = Yu8.trace();
-        yukawa Yd8 = Yd6*Yd2;                   std::complex<double> Yd8Tr = Yd8.trace();
-        yukawa Ye8 = Ye6*Ye2;                   std::complex<double> Ye8Tr = Ye8.trace();
-        yukawa Yu4Yd4 = Yu4*Yd4;                std::complex<double> Yu4Yd4Tr = Yu4Yd4.trace();
-        yukawa Yu2Yd6 = Yu2*Yd6;                std::complex<double> Yu2Yd6Tr = Yu2Yd6.trace();
-        yukawa Yu6Yd2 = Yu6*Yd2;                std::complex<double> Yu6Yd2Tr = Yu6Yd2.trace();
-        yukawa Yu2Yd2Yu2Yd2 = Yu2*Yd2*Yu2*Yd2;  std::complex<double> Yu2Yd2Yu2Yd2Tr = Yu2Yd2Yu2Yd2.trace();
+        yukawa<3,3> Yd2Yu4 = Yd2*Yu4;                yukawa<3,3> Yu2Yd2Yu2 = Yu2*Yd2*Yu2;
+        yukawa<3,3> Yd4Yu2 = Yd4*Yu2;                yukawa<3,3> Yd2Yu2Yd2 = Yd2*Yu2*Yd2;
+        yukawa<3,3> Yu8 = Yu6*Yu2;                   std::complex<double> Yu8Tr = Yu8.trace();
+        yukawa<3,3> Yd8 = Yd6*Yd2;                   std::complex<double> Yd8Tr = Yd8.trace();
+        yukawa<3,3> Ye8 = Ye6*Ye2;                   std::complex<double> Ye8Tr = Ye8.trace();
+        yukawa<3,3> Yu4Yd4 = Yu4*Yd4;                std::complex<double> Yu4Yd4Tr = Yu4Yd4.trace();
+        yukawa<3,3> Yu2Yd6 = Yu2*Yd6;                std::complex<double> Yu2Yd6Tr = Yu2Yd6.trace();
+        yukawa<3,3> Yu6Yd2 = Yu6*Yd2;                std::complex<double> Yu6Yd2Tr = Yu6Yd2.trace();
+        yukawa<3,3> Yu2Yd2Yu2Yd2 = Yu2*Yd2*Yu2*Yd2;  std::complex<double> Yu2Yd2Yu2Yd2Tr = Yu2Yd2Yu2Yd2.trace();
 
         dX.g[0] += loopfactor3*((51./40.)*Yd2Tr2*g3[0] + (183./80.)*Yd4Tr*g3[0] + (157./20.)*Yd2Tr*Ye2Tr*g3[0] + (99./40.)*Ye2Tr2*g3[0] + (261./80.)*Ye4Tr*g3[0] + (177./20.)*Yd2Tr*Yu2Tr*g3[0]
                               + (199./20.)*Ye2Tr*Yu2Tr*g3[0] + (303./40.)*Yu2Tr2*g3[0] + (3./8.)*Yu2Yd2Tr*g3[0] + (339./80.)*Yu4Tr*g3[0] + (9./20.)*X.La[0]*g2[1]*g3[0] + (-1311./160.)*Yd2Tr*g2[1]*g3[0]
@@ -107,6 +119,8 @@ void sm::operator()(const sm &X, sm &dX, const double) {
         dX.g[2] += loopfactor3*((21./2.)*Yd2Tr2*g3[2] + (9./2.)*Yd4Tr*g3[2] + (7./2.)*Yd2Tr*Ye2Tr*g3[2] + (21.)*Yd2Tr*Yu2Tr*g3[2] + (7./2.)*Ye2Tr*Yu2Tr*g3[2] + (21./2.)*Yu2Tr2*g3[2] + (-3.)*Yu2Yd2Tr*g3[2]
                               + (9./2.)*Yu4Tr*g3[2] + (-89./40.)*Yd2Tr*g2[0]*g3[2] + (-101./40.)*Yu2Tr*g2[0]*g3[2] + (-93./8.)*Yd2Tr*g2[1]*g3[2] + (-93./8.)*Yu2Tr*g2[1]*g3[2] + (-3./40.)*g2[0]*g2[1]*g3[2]
                               + (-523./120.)*g3[2]*g4[0] + (109./8.)*g3[2]*g4[1] + (-40.)*Yd2Tr*g5[2] + (-40.)*Yu2Tr*g5[2] + (77./15.)*g2[0]*g5[2] + (21.)*g2[1]*g5[2] + (65./2.)*g7[2]).real();
+                              
+        if(!X.weylordering || (X.weylordering && X.nloops > 3)) {
         dX.Yu += loopfactor3*((3./2.)*X.La[0]*X.Yu*Yd2Yu2 + (-37./8.)*X.Yu*Yd2Yu2Yd2 + (75./16.)*X.Yu*Yd2Yu4 + (-15.)*X.La[0]*X.Yu*Yd4 + (-95./8.)*X.Yu*Yd4Yu2 + (9./4.)*X.Yu*Yd6 + (43./8.)*X.Yu*Yu2Yd2Yu2
                             + (-183./16.)*X.Yu*Yu2Yd4 + (63./2.)*X.La[0]*X.Yu*Yu4 + (83./16.)*X.Yu*Yu4Yd2 + (-345./16.)*X.Yu*Yu6 + (21./4.)*X.Yu*Yd2Yu2*Yd2Tr + (-69./4.)*X.Yu*Yd4*Yd2Tr
                             + (45.)*X.La[0]*X.Yu*Yu2*Yd2Tr + (3./4.)*X.Yu*Yu2Yd2*Yd2Tr + (-9./4.)*X.Yu*Yu4*Yd2Tr + (117./8.)*X.Yu*Yd2*Yd2Tr2 + (-81./8.)*X.Yu*Yu2*Yd2Tr2 + (45./2.)*X.La[0]*X.Yu*Yd4Tr
@@ -223,6 +237,9 @@ void sm::operator()(const sm &X, sm &dX, const double) {
                             + (622./3.)*X.Ye*Yu2Tr*g4[2] + (-24.)*X.Ye*Yd2Tr*z3*g4[2] + (-24.)*X.Ye*Yu2Tr*z3*g4[2] + (607261./8000.)*X.Ye*g6[0] + (-6921./200.)*X.Ye*z3*g6[0] + (455./576.)*X.Ye*g6[1]
                             + (1125./8.)*X.Ye*z3*g6[1] + (285./16.)*X.Ye*Ye2*La2 + (-135./8.)*X.Ye*Yd2Tr*La2 + (-45./8.)*X.Ye*Ye2Tr*La2 + (-135./8.)*X.Ye*Yu2Tr*La2 + (9./4.)*X.Ye*g2[0]*La2
                             + (45./4.)*X.Ye*g2[1]*La2 + (-9./2.)*X.Ye*La3);
+        }
+        
+        if(!X.weylordering || (X.weylordering && X.nloops > 4)) {
         dX.La[0] += loopfactor3*((1440.)*X.La[0]*Yd2Tr*Yd4Tr + (-864.)*Yd4Tr2 + (-5643./4.)*X.La[0]*Yd6Tr + (-891.)*Yd2Tr*Yd6Tr + (156.)*Yd8Tr + (480.)*X.La[0]*Yd4Tr*Ye2Tr + (-297.)*Yd6Tr*Ye2Tr
                                + (480.)*X.La[0]*Yd2Tr*Ye4Tr + (-576.)*Yd4Tr*Ye4Tr + (160.)*X.La[0]*Ye2Tr*Ye4Tr + (-96.)*Ye4Tr2 + (-1881./4.)*X.La[0]*Ye6Tr + (-297.)*Yd2Tr*Ye6Tr + (-99.)*Ye2Tr*Ye6Tr + (52.)*Ye8Tr
                                + (1440.)*X.La[0]*Yd4Tr*Yu2Tr + (-891.)*Yd6Tr*Yu2Tr + (480.)*X.La[0]*Ye4Tr*Yu2Tr + (-297.)*Ye6Tr*Yu2Tr + (126.)*X.La[0]*Yd2Tr*Yu2Yd2Tr + (288.)*Yd4Tr*Yu2Yd2Tr + (42.)*X.La[0]*Ye2Tr*Yu2Yd2Tr
@@ -276,6 +293,7 @@ void sm::operator()(const sm &X, sm &dX, const double) {
                                + (-216.)*Yu2Tr*z3*g2[1]*La2 + (-999./10.)*g2[0]*g2[1]*La2 + (-243./5.)*z3*g2[0]*g2[1]*La2 + (-612.)*Yd2Tr*g2[2]*La2 + (-612.)*Yu2Tr*g2[2]*La2 + (576.)*Yd2Tr*z3*g2[2]*La2
                                + (576.)*Yu2Tr*z3*g2[2]*La2 + (-1881./25.)*g4[0]*La2 + (-729./50.)*z3*g4[0]*La2 + (-1389./16.)*g4[1]*La2 + (-513./2.)*z3*g4[1]*La2 + (873./8.)*Yd2Tr*La3 + (291./8.)*Ye2Tr*La3
                                + (873./8.)*Yu2Tr*La3 + (-237./20.)*g2[0]*La3 + (9./5.)*z3*g2[0]*La3 + (-237./4.)*g2[1]*La3 + (9.)*z3*g2[1]*La3 + (897./8.)*La4 + (63.)*z3*La4);
+        }
                                
         if(X.nloops > 3) {
           gauge<3> g9(g7.cwiseProduct(g2));
@@ -283,7 +301,7 @@ void sm::operator()(const sm &X, sm &dX, const double) {
           ckm quarks(X.Yu, X.Yd);
           quarks.calculate();
           // extract lepton masses
-          yukawa zero;
+          yukawa<3,3> zero;
           pmns leptons(zero, X.Ye);
           leptons.calculate();
           double yt = quarks.get_upyukawas().transpose()[2]; double yt2 = yt*yt; double yt4 = yt2*yt2; double yt6 = yt4*yt2;

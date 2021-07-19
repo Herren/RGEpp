@@ -7,7 +7,8 @@ class mssm : public base<3,0> {
   
  public:
  mssm() : base<3,0>() {};
- mssm(const gauge<3> g_in, const yukawa Yu_in, const yukawa Yd_in, const yukawa Ye_in) : base<3,0>(g_in, Yu_in, Yd_in, Ye_in) {};
+ mssm(const gauge<3> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in, const int nloops_in, const bool weylordering_in) : base<3,0>(g_in, Yu_in, Yd_in, Ye_in, nloops_in, weylordering_in) {};
+ mssm(const gauge<3> g_in, const yukawa<3,3> Yu_in, const yukawa<3,3> Yd_in, const yukawa<3,3> Ye_in) : base<3,0>(g_in, Yu_in, Yd_in, Ye_in) {};
  mssm(const base<3,0> &X) : base<3,0>(X) {};
  
   // contains the RGEs

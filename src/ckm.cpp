@@ -9,11 +9,11 @@ void ckm::calculate() {  // core routine for calculating all parameters
   // NOTE: eigen uses the same convention for rotation matrices as in REAP/MPT documentation
   
   // diagonalise up quarks
-  SelfAdjointEigenSolver<yukawa> UL(Yu.adjoint()*Yu);
+  SelfAdjointEigenSolver<yukawa<3,3> > UL(Yu.adjoint()*Yu);
   upyuk = UL.eigenvalues().array().sqrt().matrix();
   
   // diagonalise down quarks
-  SelfAdjointEigenSolver<yukawa> DL(UL.eigenvectors().adjoint()*Yd.adjoint()*Yd*UL.eigenvectors());
+  SelfAdjointEigenSolver<yukawa<3,3> > DL(UL.eigenvectors().adjoint()*Yd.adjoint()*Yd*UL.eigenvectors());
   downyuk = DL.eigenvalues().array().sqrt().matrix();
   
   // define CKM matrix
@@ -33,7 +33,7 @@ void ckm::calculate() {  // core routine for calculating all parameters
   CKMparameters[3] = - arg(( conj(CKM(0,0))*CKM(0,2)*CKM(2,0)*conj(CKM(2,2)) / cos(CKMparameters[0])/cos(CKMparameters[1])/cos(CKMparameters[1])/cos(CKMparameters[2])/sin(CKMparameters[1]) + cos(CKMparameters[0])*cos(CKMparameters[2])*sin(CKMparameters[1]) ) / sin(CKMparameters[0])/sin(CKMparameters[2])); // Dirac phase should be positive in this convention!
 }
 
-yukawa ckm::get_CKM() {
+yukawa<3,3> ckm::get_CKM() {
   if (CKM(0,0).real() == 0.) calculate();
   return CKM;
 }

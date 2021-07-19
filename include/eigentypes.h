@@ -5,7 +5,8 @@
 #include <Eigen/Core>
 
 // 3x3 Yukawa matrices
-using yukawa = Eigen::Matrix<std::complex<double>, 3,3>;
+template<int n, int m>
+using yukawa = Eigen::Matrix<std::complex<double>, n,m>;
 
 // n-dimensional vector of real gauge couplings
 template<int n>
@@ -16,12 +17,12 @@ template<int n>
 using self = Eigen::Matrix<std::complex<double>, n,1>;
 
 // Component-wise absolute value of Yukawa matrix
-inline yukawa abs(const yukawa &Y) {
-  return Y.cwiseAbs().cast<std::complex<double> >();
+template<int n, int m> yukawa<n,m> abs(const yukawa<n,m> &Y) {
+  return (Y.cwiseAbs()).template cast<std::complex<double> >();
 }
 
 // Check Yukawa matrix for NaN
-inline bool isnotnan(const yukawa &Y) {
+template<int n, int m> bool isnotnan(const yukawa<n,m> &Y) {
   return Y == Y;
 }
 

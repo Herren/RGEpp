@@ -9,11 +9,11 @@ void pmns::calculate() {  // core routine for calculating all parameters
   // NOTE: eigen uses the same convention for rotation matrices as REAP/MPT
   
   // diagonalise charged leptons
-  SelfAdjointEigenSolver<yukawa> EL(Ye.adjoint()*Ye);
+  SelfAdjointEigenSolver<yukawa<3,3> > EL(Ye.adjoint()*Ye);
   elyuk = EL.eigenvalues().array().sqrt().matrix();
   
   // diagonalise neutinos
-  SelfAdjointEigenSolver<yukawa> NL(EL.eigenvectors().adjoint()*M.adjoint()*M*EL.eigenvectors());
+  SelfAdjointEigenSolver<yukawa<3,3> > NL(EL.eigenvectors().adjoint()*M.adjoint()*M*EL.eigenvectors());
   numasses = NL.eigenvalues().array().sqrt().matrix();
   
   // define PMNS matrix
@@ -48,7 +48,7 @@ void pmns::calculate() {  // core routine for calculating all parameters
   betadecaymass = sqrt(PMNSabs2.adjoint()*numasses.cwiseAbs2());
 }
 
-yukawa pmns::get_PMNS() {
+yukawa<3,3> pmns::get_PMNS() {
   if (PMNS(0,0).real() == 0.) calculate();
   return PMNS;
 }
